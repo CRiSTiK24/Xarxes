@@ -47,7 +47,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 /* -1 si hi ha un error en la interfície de sockets.                      */
 int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes)
 {
-    const char *IPloc = "0.0.0.0\0";
+    const char *IPloc = "0.0.0.0";
 	*SckEsc = TCP_CreaSockServidor(IPloc, portTCPloc);
     if(*SckEsc==-1){
         *MisRes = "ERROR: El socket ip no s'ha pogut crear\0";
@@ -76,8 +76,6 @@ int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes)
 /* -1 si hi ha un error a la interfície de sockets.                       */
 int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli, int *portTCPcli, char *MisRes)
 {
-    TCP_TrobaAdrSockLoc(SckEsc, IPser, portTCPser);
-    TCP_TrobaAdrSockRem(SckEsc, IPcli, portTCPcli);
 	if(TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli) == -1){
         *MisRes = "ERROR:No s'ha pogut acceptar la conexio entre el Socket local amb IP remota\0";
         return -1;
@@ -109,45 +107,8 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli, 
 /* -4 si hi ha problemes amb el fitxer de la petició (p.e., nomfitxer no  */
 /*  comença per /, fitxer no es pot llegir, fitxer massa gran, etc.).     */
 int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *MisRes)
-{   
-    //crea un buffer de 9999+3+4 chars
-    char buffer[10006];
-    //llavors utilitza el buffer i l'emplenem amb rebtcp
-    if(TCP_Rep(SckCon, buffer, 10006) == -1){
-        *MisRes = "ERROR: No s'ha pogut rebre la peticio\0";
-        return -1;
-    }
-    //si el buffer es buit, tanca la conexio
-    if(buffer[0] == '\0'){
-        *MisRes = "ERROR: La conexio s'ha tancat\0";
-        return -3;
-    }
-
-    //3 primers chars del buffer i guardarlos a tipusPeticio
-    strncpy(TipusPeticio, buffer, 3);
-
-    //si tipusPeticio no és igual a OBT, retorna -2
-    if(strcmp(TipusPeticio, "OBT") != 0){
-        *MisRes = "ERROR: El tipus de peticio no es correcte\0";
-        return -2;
-    }
-
-    //llegeix els 3 seguents elements del buffer
-    char tamanyfitxer[3];
-    strncpy(tamanyfitxer, buffer[3], 3);
-
-    //si el int es 0000, retorna -4
-    if(tamanyfitxer == "0000"){
-        *MisRes = "ERROR: El tamany del fitxer no es correcte\0";
-        return -4;
-    }
-
-    //llegeix el seguent char
-    char primerchar = buffer[7];
-
-    si no és un /, retorna -4
-    llegeix tamanyfitxer-1 bits i els guarda a NomFitx
-    
+{
+	
 }
 
 /* Tanca la connexió TCP d'identificador "SckCon".                        */
@@ -161,17 +122,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 /*  -1 si hi ha un error a la interfície de sockets.                      */
 int UEBs_TancaConnexio(int SckCon, char *MisRes)
 {
-
-    if(TCP_TancaConnexio(SckCon) == -1){
-        *MisRes = "ERROR: No s'ha pogut tancar la connexio\0";
-        return -1;
-    }
-    else{
-        *MisRes = "EXIT: S'ha pogut tancar la connexio\0";
-        return 0;
-    }
-
-
+	
 }
 
 /* Si ho creieu convenient, feu altres funcions EXTERNES                  */

@@ -53,7 +53,16 @@
 /* -1 si hi ha error.                                                     */
 int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 {
-	
+    int scon,i;
+	/* Es crea el socket TCP scon del client (el socket "local"), que de moment no té */
+    /* adreça (@IP i #port TCP) assignada. */
+    struct sockaddr_in adrrem;
+    if((scon=socket(AF_INET,SOCK_STREAM,0))==-1) //definir de manera explicita si són valides
+    {
+        perror("Error en socket");
+        exit(-1);
+    }
+    return scon;
 }
 
 /* Crea un socket TCP “servidor” (o en estat d’escolta – listen –) a      */
@@ -88,6 +97,17 @@ int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 {
 	
+    if(*IPloc=="0.0.0.0" || portTCPloc == 0) //Aquesta linea en baix no cal
+    adrrem.sin_family=AF_INET;
+    adrrem.sin_port=htons(portTCPloc);
+    adrrem.sin_addr.s_addr= inet_addr(IPloc);
+    for(i=0;i<8;i++){adrrem.sin_zero[i]='\0';}
+    if((connect(scon,(struct sockaddr*)&adrrem,sizeof(adrrem)))==-1)
+    {
+        perror("Error en connect");
+        close(scon);
+        exit(-1);
+    }
 }
 
 /* El socket TCP “servidor” d’identificador “Sck” accepta fer una         */
@@ -184,8 +204,8 @@ int TCP_TrobaAdrSockRem(int Sck, char *IPrem, int *portTCPrem)
 	
 }
 
-/* Obté un missatge de text de l'S.O. que descriu l'error produït en      */
-/* la darrera crida de sockets TCP.                                       */
+/* Obté un missatge de text que descriu l'error produït en la darrera     */
+/* crida de sockets TCP.                                                  */
 /*                                                                        */
 /* Retorna:                                                               */
 /*  aquest missatge de text en un "string" de C (vector de chars          */
