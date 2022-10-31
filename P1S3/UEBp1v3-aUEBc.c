@@ -51,7 +51,31 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 /* -1 si hi ha un error a la interfície de sockets.                       */
 int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, int *portTCPcli, char *MisRes)
 {
-	
+    int retornada = 0;
+	int socket = TCP_CreaSockClient("0.0.0.0", "0");
+    if(socket==-1){
+        retornada = -1;
+        *MisRes = "Hi ha hagut un error al crear el socket Client \0";
+    }
+    else{
+        int conexioCorrecte = TCP_DemanaConnexio(socket, IPser, portTCPser);
+        if(connexioCorrecte == -1){
+            retornada = -1;
+            *MisRes = "Hi ha hagut un error al crear la connexió amb el servidor \0";
+        }
+        else{
+            if(TCP_TrobaAdrSockLoc(SckEsc,IPcli,portTCPcli)==-1 || TCP_TrobaAdrSockRem(SckEsc,IPser,portTCPser) ==-1){
+                *MisRes = "ERROR:No s'ha treure les ip i ports del socket\0";
+                retornada = -1;
+
+            }
+            else{
+                *MisRes = "EXIT:S'ha pogut demanar la conexio entre el Socket local amb Ip remota\0";
+            }
+
+        }
+    }
+    return retornada;
 }
 
 /* Obté el fitxer de nom "NomFitx" del S UEB a través de la connexió TCP  */
@@ -74,7 +98,26 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, int *por
 /* -3 si l'altra part tanca la connexió.                                  */
 int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx, char *MisRes)
 {
-	
+    int retornada = 0;
+    int llargadaPath = strlen(NomFitx);
+    if(llargadaPath >10000 || llargadaPath <= 0){
+        retornada = -2;
+        *MisRes = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+    }
+    else{
+        if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1){
+            retornada = -1;
+            *MisRes = "ERROR: No s'ha pogut construir i enviar el missatge\0";
+        }
+        else{
+            char* tipus = (char*)malloc(4*sizeof(char));
+            if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx)==-1){
+                retornada = -1;
+                *MisRes = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
+            }
+        }
+    }
+    return retornada;
 }
 
 /* Tanca la connexió TCP d'identificador "SckCon".                        */
@@ -88,7 +131,15 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx, 
 /*  -1 si hi ha un error a la interfície de sockets.                      */
 int UEBc_TancaConnexio(int SckCon, char *MisRes)
 {
-	
+	int retornada = 0;
+	if(TCP_TancaSock(SckCon)==-1){
+        retornada = -1;
+        *MisRes = "ERROR: No s'ha pogut tancar el fitxer\0";
+    }
+    else{
+        *MisRes = "EXIT: S'ha pogut tancar el fitxer\0";
+    }
+    return retornada;
 }
 
 /* Si ho creieu convenient, feu altres funcions EXTERNES                  */
@@ -125,7 +176,17 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
 int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
-	
+    int retornada = 0;
+	char *buffer = (char*)malloc((7+long1)*sizeof(char));
+    memcpy(buffer,tipus, 3);
+    char * longitud;
+    sprintf(longitud, "%.4d", long1);
+    memcpy(buffer+3,longitud,4);
+    memcpy(buffer+7,info1,long1);
+    if(TCP_Envia(SckCon, buffer, 7+long1)==-1){
+        retornada = -1;
+    }
+    return retornada;
 }
 
 /* Rep a través del socket TCP “connectat” d’identificador “SckCon” un    */
@@ -145,5 +206,36 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 /* -3 si l'altra part tanca la connexió.                                  */
 int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
-	
+	int retornada = 0;
+	char *buffer = (char*)malloc(1006*sizeof(char));
+    //read the message from the socket
+    int read = TCP_Rep(SckCon, buffer, 1006);  //TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
+    //if read is -1, return -1
+    if(read == -1){
+        int retornada = -1;
+    }
+    else{
+        //save in TiposPeticio the substring of the buffer from 0 to 2
+        memcpy(tipus, buffer, 3);
+        tipus[3] = '\0';
+        if(tipus!="COR"||tipus!="ERR"){
+            int retornada = -2;
+        }
+        else{
+            //save in a new string called tamanyFitxer the substring from 3 to 7 of buffer
+            char *tamanyFitxer;
+            memcpy(tamanyFitxer, buffer+3, 5);
+            //convert tamanyFitxer to int
+            *long1 = atoi(tamanyFitxer);
+            //if tamanyFitxer is 0 or a number, return -2
+            for(int i = 0; i<4; i++){
+                if(tamanyFitxer[i]<='0' || tamanyFitxer[i]>'9'){
+                    int retornada = -2;
+                }
+            }
+            //read tamanyFitxer chars from buffer and save it in NomFitx
+            memcpy(info1, buffer+8, *long1);
+        }
+    }
+    return retornada;
 }
