@@ -26,7 +26,7 @@
 
 int main(int argc,char *argv[])
 {
-	/* Declaració de variables, p.e., int n;                              */
+	/* Declaració de variables, p.e., int n;                          */
 	
 	int SckEsc, SckConv;
 	int bytes_llegits, bytes_escrits;
@@ -36,31 +36,31 @@ int main(int argc,char *argv[])
 	char iprem[16], iploc[16];
 	int portrem, portloc;
 	
-	/* Expressions, estructures de control, crides a funcions, etc.       */
-	
-	/* Creem el socket del servidor 									  */		
+	/* Expressions, estructures de control, crides a funcions, etc.   */
+
+	/* Creem el socket del servidor 				  */		
 	if((SckEsc = TCP_CreaSockServidor("0.0.0.0", 0)) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
 	
-	/* Acceptem la petició de connect									  */
+	/* Acceptem la petició de connect				  */
 	if((SckConv = TCP_AcceptaConnexio(SckEsc, iprem, portrem)) == -1)
 	{
 		return(-1);
 	} 
 	
-	/* Ara adrrem conté l'adreça del socket remot (@IP i #port TCP).      */
-	
-	/* Obtenim la informació del socket local							  */
+	/* Ara adrrem conté l'adreça del socket remot (@IP i #port TCP).  */
+
+	/* Obtenim la informació del socket local			  */
 	if(TCP_TrobaAdrSockLoc(SckConv, iploc, portloc == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
 	
-	/* S'escriu a pantalla el que arriba pel socket connectat SckConv     */
+	/* S'escriu a pantalla el que arriba pel socket connectat SckConv */
 	if(TCP_Rep(SckConv, buffer, sizeof(buffer)) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
@@ -72,10 +72,10 @@ int main(int argc,char *argv[])
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
-	
-	/* Es tanca el socket scon, que com que és un socket TCP, també vol   */
-	/* dir que es tanca la connexió TCP establerta, i es tanca el socket  */
-	/* d'escolta sesc.                        							  */
+
+	/* Es tanca el socket scon, que com que és un socket TCP, també   */
+	/* vol dir que es tanca la connexió TCP establerta, i es tanca    */
+	/* el socket d'escolta sesc.                        		  */
 	if(TCP_TancaSock(SckConv) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
