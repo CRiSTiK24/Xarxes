@@ -6,8 +6,8 @@
 /* TCP, en unes altres funcions més simples i entenedores: la "nova"      */
 /* interfície de sockets TCP.                                             */
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
@@ -53,27 +53,22 @@
 /* -1 si hi ha error.                                                     */
 int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 {
-    int scon,i;
-	/* Es crea el socket TCP scon del client (el socket "local"), que de moment no té */
-    /* adreça (@IP i #port TCP) assignada. */
-    struct sockaddr_in adrrem;
-    if((scon=socket(AF_INET,SOCK_STREAM,0))==-1) //definir de manera explicita si són valides
-    {
-        perror("Error en socket");
-        exit(-1);
-    }
-    if(*IPloc=="0.0.0.0" || portTCPloc == 0) //Aquesta linea en baix no cal
-    adrrem.sin_family=AF_INET;
-    adrrem.sin_port=htons(portTCPloc);
-    adrrem.sin_addr.s_addr= inet_addr(IPloc);
-    for(i=0;i<8;i++){adrrem.sin_zero[i]='\0';}
-    if((connect(scon,(struct sockaddr*)&adrrem,sizeof(adrrem)))==-1)
-    {
-        perror("Error en connect");
-        close(scon);
-        exit(-1);
-    }
-    return scon;
+	int scon;
+	if((scon = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+	{
+		return(-1);
+	}
+	/* Assignem @IP i #port TCP al socket								  */
+	struct sockaddr_in adrloc;
+	adrloc.sin_family = AF_INET;
+	adrloc.sin_port = htons(portTCPloc);
+	adrloc.sin_addr.s_addr = inet_addr(IPloc);
+	for(int i = 0; i < 8; i++){ adrloc.sin_zero[i] = '\0'; }
+	if((bind(scon,(struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
+	{
+		return (-1);
+	}
+	return scon;
 }
 
 /* Crea un socket TCP “servidor” (o en estat d’escolta – listen –) a      */
@@ -89,7 +84,27 @@ int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 /* -1 si hi ha error.                                                     */
 int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 {
-	
+	int sesc;
+	if((sesc = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+	{
+		return(-1);
+	}
+	struct sockaddr_in adrloc;
+	adrloc.sin_family = AF_INET;
+	adrloc.sin_port = htons(portTCPloc);
+	adrloc.sin_addr.s_addr = inet_addr(IPloc); 
+	for(int i = 0; i < 8; i++){ adrloc.sin_zero[i] = '\0'; }
+	if((bind(sesc, (struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
+	{
+		return(-1);
+	}
+	/* Es crea una cua per emmagatzemar peticions de connexió pendents.   */
+	if((listen(sesc, 3)) == -1)
+	{
+		return(-1);
+	}
+	/* Un cop fet listen() es diu que sesc és un socket "d'escolta". 	  */
+	return sesc;
 }
 
 /* El socket TCP “client” d’identificador “Sck” es connecta al socket     */
@@ -107,7 +122,18 @@ int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 /* -1 si hi ha error.                                                     */
 int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 {
-	
+	struct sockaddr_in adrrem;
+	adrrem.sin_family = AF_INET;
+	adrrem.sin_port = htons(portTCPrem);
+	adrrem.sin_addr.s_addr = inet_addr(IPrem);
+	for(int i = 0; i < 8; i++){ adrrem.sin_zero[i] = '\0'; }
+	if((connect(Sck,(struct sockaddr*)&adrrem, sizeof(adrrem))) == -1)
+	{
+		return(-1);
+	}
+	/* Un cop fet connect() es diu que el socket scon està "connectat" al */
+	/* socket remot. 													  */
+	return 0;
 }
 
 /* El socket TCP “servidor” d’identificador “Sck” accepta fer una         */
@@ -128,7 +154,19 @@ int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 /* -1 si hi ha error.                                                     */
 int TCP_AcceptaConnexio(int Sck, char *IPrem, int *portTCPrem)
 {
-	
+	struct sockaddr_in adrrem;
+	int scon;
+	socklen_t long_adrrem = sizeof(adrrem);
+	if((scon = accept(Sck,(struct sockaddr*)&adrrem, &long_adrrem)) == -1)
+	{
+		return(-1);
+	}
+	/* inet_ntoa() converteix l'@IP en format decimal de vector de 		  */
+	/* caràcters 														  */
+	strcpy(IPrem, inet_ntoa(adrrem.sin_addr));
+	/* htons() fa l'operació inversa de htons() 						  */
+	*portTCPrem = ntohs(adrrem.sin_port);
+	return scon;
 }
 
 /* Envia a través del socket TCP “connectat” d’identificador “Sck” la     */
@@ -143,7 +181,12 @@ int TCP_AcceptaConnexio(int Sck, char *IPrem, int *portTCPrem)
 /* -1 si hi ha error.                                                     */
 int TCP_Envia(int Sck, const char *SeqBytes, int LongSeqBytes)
 {
-	
+	int bytes_escrits = -1;
+	if((bytes_escrits = write(Sck, SeqBytes, LongSeqBytes)) == -1)
+	{
+		return(-1);
+	}
+	return bytes_escrits;
 }
 
 /* Rep a través del socket TCP “connectat” d’identificador “Sck” una      */
@@ -160,7 +203,12 @@ int TCP_Envia(int Sck, const char *SeqBytes, int LongSeqBytes)
 /* -1 si hi ha error.                                                     */
 int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 {
-	
+	int bytes_llegits = -1;
+	if((bytes_llegits = read(Sck, SeqBytes, LongSeqBytes)) == -1)
+	{
+		return(-1);
+	}
+	return bytes_llegits;
 }
 
 /* S’allibera (s’esborra) el socket TCP d’identificador “Sck”; si “Sck”   */
@@ -171,7 +219,11 @@ int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 /* -1 si hi ha error.                                                     */
 int TCP_TancaSock(int Sck)
 {
-	
+	if(close(Sck) == -1)
+	{
+		return(-1);
+	}
+	return 0;
 }
 
 /* Donat el socket TCP d’identificador “Sck”, troba l’adreça d’aquest     */
@@ -186,7 +238,16 @@ int TCP_TancaSock(int Sck)
 /* -1 si hi ha error.                                                     */
 int TCP_TrobaAdrSockLoc(int Sck, char *IPloc, int *portTCPloc)
 {
-	
+	struct sockaddr_in adrloc;
+	bzero(&adrloc, sizeof(adrloc)); 
+	socklen_t long_adrloc = sizeof(adrloc);
+	if(getsockname(Sck, (struct sockaddr *) &adrloc, &long_adrloc) == -1)
+	{
+		return(-1);
+	}
+	strcpy(IPloc, inet_ntoa(adrloc.sin_addr));
+	*portTCPloc = ntohs(adrloc.sin_port);
+	return 0;
 }
 
 /* Donat el socket TCP “connectat” d’identificador “Sck”, troba l’adreça  */
@@ -201,18 +262,27 @@ int TCP_TrobaAdrSockLoc(int Sck, char *IPloc, int *portTCPloc)
 /* -1 si hi ha error.                                                     */
 int TCP_TrobaAdrSockRem(int Sck, char *IPrem, int *portTCPrem)
 {
-	
+	struct sockaddr_in adrrem;
+	bzero(&adrrem,sizeof(adrrem)); 
+	socklen_t long_adrrem = sizeof(adrrem);
+	if(getpeername(Sck,(struct sockaddr *) &adrrem, &long_adrrem) == -1)
+	{
+		return(-1);
+	}
+	strcpy(IPrem,inet_ntoa(adrrem.sin_addr));
+	*portTCPrem = ntohs(adrrem.sin_port);
+	return 0;
 }
 
-/* Obté un missatge de text que descriu l'error produït en la darrera     */
-/* crida de sockets TCP.                                                  */
+/* Obté un missatge de text de l'S.O. que descriu l'error produït en      */
+/* la darrera crida de sockets TCP.                                       */
 /*                                                                        */
 /* Retorna:                                                               */
 /*  aquest missatge de text en un "string" de C (vector de chars          */
 /*  imprimibles acabat en '\0').                                          */
 char* TCP_ObteMissError(void)
 {
- return strerror(errno);
+	return strerror(errno);
 } 
 
 /* Si ho creieu convenient, feu altres funcions EXTERNES                  */
