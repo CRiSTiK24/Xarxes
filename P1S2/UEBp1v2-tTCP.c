@@ -58,7 +58,7 @@ int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 	{
 		return(-1);
 	}
-	/* Assignem @IP i #port TCP al socket								  */
+	/* Assignem @IP i #port TCP al socket				  */
 	struct sockaddr_in adrloc;
 	adrloc.sin_family = AF_INET;
 	adrloc.sin_port = htons(portTCPloc);
@@ -98,12 +98,13 @@ int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 	{
 		return(-1);
 	}
-	/* Es crea una cua per emmagatzemar peticions de connexió pendents.   */
+	/* Es crea una cua per emmagatzemar peticions de connexió         */
+	/* pendents.   							  */
 	if((listen(sesc, 3)) == -1)
 	{
 		return(-1);
 	}
-	/* Un cop fet listen() es diu que sesc és un socket "d'escolta". 	  */
+	/* Un cop fet listen() es diu que sesc és un socket "d'escolta".  */
 	return sesc;
 }
 
@@ -131,8 +132,8 @@ int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 	{
 		return(-1);
 	}
-	/* Un cop fet connect() es diu que el socket scon està "connectat" al */
-	/* socket remot. 													  */
+	/* Un cop fet connect() es diu que el socket scon està            */
+	/* "connectat" al socket remot. 				  */
 	return 0;
 }
 
@@ -161,10 +162,10 @@ int TCP_AcceptaConnexio(int Sck, char *IPrem, int *portTCPrem)
 	{
 		return(-1);
 	}
-	/* inet_ntoa() converteix l'@IP en format decimal de vector de 		  */
-	/* caràcters 														  */
+	/* inet_ntoa() converteix l'@IP en format decimal de vector de 	  */
+	/* caràcters 							  */
 	strcpy(IPrem, inet_ntoa(adrrem.sin_addr));
-	/* htons() fa l'operació inversa de htons() 						  */
+	/* htons() fa l'operació inversa de htons() 			  */
 	*portTCPrem = ntohs(adrrem.sin_port);
 	return scon;
 }
