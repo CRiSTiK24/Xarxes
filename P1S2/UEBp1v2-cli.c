@@ -26,7 +26,7 @@
 
 int main(int argc,char *argv[])
 {
-	/* Declaració de variables, p.e., int n;                              */
+	/* Declaració de variables, p.e., int n;                          */
  
 	int SckConv;
 	int bytes_llegits, bytes_escrits;
@@ -34,34 +34,34 @@ int main(int argc,char *argv[])
 	char iprem[16], iploc[16];
 	int portrem, portloc;
 
-	/* Expressions, estructures de control, crides a funcions, etc.       */
+	/* Expressions, estructures de control, crides a funcions, etc.   */
 	
-	/* Creem el socket local 											  */
+	/* Creem el socket local 					  */
 	if((SckConv = TCP_CreaSockClient("0.0.0.0", 0)) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
 	
-	/* Demanem connexió amb el servidor 								  */
+	/* Demanem connexió amb el servidor 				  */
 	if(TCP_DemanaConnexio(SckConv, iprem, portrem) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
 	
-	/* Un cop fet connect() es diu que el socket scon està "connectat" al */ 
-	/* socket remot. Com que és un socket TCP això també vol dir que s'ha */
-	/* establert una connexió TCP.     									  */
+	/* Un cop fet connect() es diu que el socket scon està 		  */ 
+	/* "connectat" al socket remot. Com que és un socket TCP això     */
+	/* també vol dir que s'ha establert una connexió TCP.     	  */
 	
-	/* Obtenim la informació del socket local							  */
+	/* Obtenim la informació del socket local			  */
 	if(TCP_TrobaAdrSockLoc(SckConv, iploc, portloc == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
 		exit(-1);
 	}
 	
-	/* S'envia pel socket connectat scon el que es llegeix del teclat     */
+	/* S'envia pel socket connectat scon el que es llegeix del teclat */
 	if(TCP_Rep(SckConv, buffer, sizeof(buffer)) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
@@ -74,8 +74,8 @@ int main(int argc,char *argv[])
 		exit(-1);
 	}
 	
-	/* Es tanca el socket scon, que com que és un socket TCP, també vol   */ 
-	/* dir que es tanca la connexió TCP establerta.						  */
+	/* Es tanca el socket scon, que com que és un socket TCP, també   */ 
+	/* vol dir que es tanca la connexió TCP establerta.		  */
 	if(TCP_TancaSock(SckConv) == -1)
 	{
 		printf("%s\n", TCP_ObteMissError());
