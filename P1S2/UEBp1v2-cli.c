@@ -5,8 +5,8 @@
 /* transport TCP (fent crides a la "nova" interfície de la capa de        */
 /* transport o "nova" interfície de sockets).                             */
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
@@ -26,43 +26,60 @@
 
 int main(int argc,char *argv[])
 {
-int bytes_llegits, bytes_escrits;
-char buffer[200];
-char iprem[16];
-int portrem;
-/*CANVI, passar la adreça i port per teclat*/
-printf("Entra la ip del server remot (menys de 15 caracters)");
-scanf("%s",iprem);
-printf("Entra el port del server remot (int)");
-scanf("%d", &portrem);
-TCP_CreaSockClient(iprem,portrem);
-/*FI CANVI*/
-//strcpy(iprem,"10.0.0.23");
-//portrem = 3000; 
+	/* Declaració de variables, p.e., int n;                              */
+ 
+	int SckConv;
+	int bytes_llegits, bytes_escrits;
+	char buffer[200];
+	char iprem[16], iploc[16];
+	int portrem, portloc;
 
-/* Un cop fet connect() es diu que el socket scon està "connectat" al socket remot. */
-/* Com que és un socket TCP això també vol dir que s'ha establert una connexió TCP. */
-/* S'envia pel socket connectat scon el que es llegeix del teclat */
-if((bytes_llegits=read(0,buffer,sizeof(buffer)))==-1)
-{
-perror("Error en read");
- close(scon);
- exit(-1);
-}
-if((bytes_escrits=write(scon,buffer,bytes_llegits))==-1)
-{
- perror("Error en write");
- close(scon);
- exit(-1);
-}
-/* Es tanca el socket scon, que com que és un socket TCP, també vol dir que es tanca la */
-/* connexió TCP establerta. */
-close(scon);
-return(0);
- /* Declaració de variables, p.e., int n;                                 */
-
- /* Expressions, estructures de control, crides a funcions, etc.          */
-
+	/* Expressions, estructures de control, crides a funcions, etc.       */
+	
+	/* Creem el socket local 											  */
+	if((SckConv = TCP_CreaSockClient("0.0.0.0", 0)) == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+		exit(-1);
+	}
+	
+	/* Demanem connexió amb el servidor 								  */
+	if(TCP_DemanaConnexio(SckConv, iprem, portrem) == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+		exit(-1);
+	}
+	
+	/* Un cop fet connect() es diu que el socket scon està "connectat" al */ 
+	/* socket remot. Com que és un socket TCP això també vol dir que s'ha */
+	/* establert una connexió TCP.     									  */
+	
+	/* Obtenim la informació del socket local							  */
+	if(TCP_TrobaAdrSockLoc(SckConv, iploc, portloc == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+		exit(-1);
+	}
+	
+	/* S'envia pel socket connectat scon el que es llegeix del teclat     */
+	if(TCP_Rep(SckConv, buffer, sizeof(buffer)) == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+		exit(-1);
+	}
+	
+	if(TCP_Envia(SckConv, buffer, bytes_llegits) == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+		exit(-1);
+	}
+	
+	/* Es tanca el socket scon, que com que és un socket TCP, també vol   */ 
+	/* dir que es tanca la connexió TCP establerta.						  */
+	if(TCP_TancaSock(SckConv) == -1)
+	{
+		printf("%s\n", TCP_ObteMissError());
+	}
 }
 
 /* Definició de funcions INTERNES, és a dir, d'aquelles que es faran      */
