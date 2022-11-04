@@ -28,10 +28,35 @@
 
 int main(int argc,char *argv[])
 {
- /* Declaració de variables, p.e., int n;                                 */
-
+ /* Declaració de variables, p.e., int n;                                */
+    int* socket;
+    int port = 3000; // despres farem que es llegeixi de fitxer
+    char* missatgeError = malloc(200);
+    char *IPser;
+    int *portTCPser;
+    char *IPcli;
+    int *portTCPcli;
+    char *tiposPeticio;
+    char *nomFitx;    
  /* Expressions, estructures de control, crides a funcions, etc.          */
-
+    if(UEBs_IniciaServ(socket, port, missatgeError)==-1){
+        printf(missatgeError);
+    }
+    else{
+        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, MisRes)==-1){
+            printf(missatgeError);
+        }
+        else{
+            if(UEBs_ServeixPeticio(*socket, tipusPeticio, nomFitx, MisRes)<0){
+                printf(missatgeError);
+            }
+            
+        }
+        if(UEBs_TancaConnexio(*socket, MisRes)==-1){
+            printf(missatgeError);
+        }
+    }
+    return 0;
 }
 
 /* Definició de funcions INTERNES, és a dir, d'aquelles que es faran      */

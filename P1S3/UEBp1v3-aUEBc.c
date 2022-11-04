@@ -15,6 +15,7 @@
 /*   un #include del propi fitxer capçalera)                              */
 
 #include "UEBp1v3-tTCP.h"
+#include "string.h"
 
 /* Definició de constants, p.e.,                                          */
 
@@ -59,12 +60,12 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, int *por
     }
     else{
         int conexioCorrecte = TCP_DemanaConnexio(socket, IPser, portTCPser);
-        if(connexioCorrecte == -1){
+        if(conexioCorrecte == -1){
             retornada = -1;
             *MisRes = "Hi ha hagut un error al crear la connexió amb el servidor \0";
         }
         else{
-            if(TCP_TrobaAdrSockLoc(SckEsc,IPcli,portTCPcli)==-1 || TCP_TrobaAdrSockRem(SckEsc,IPser,portTCPser) ==-1){
+            if(TCP_TrobaAdrSockLoc(socket,IPcli,portTCPcli)==-1 || TCP_TrobaAdrSockRem(socket,IPser,portTCPser) ==-1){
                 *MisRes = "ERROR:No s'ha treure les ip i ports del socket\0";
                 retornada = -1;
 
@@ -103,6 +104,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx, 
     if(llargadaPath >10000 || llargadaPath <= 0){
         retornada = -2;
         *MisRes = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+        //o també MisRes = (char*)"ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
     }
     else{
         if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1){
@@ -132,7 +134,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx, 
 int UEBc_TancaConnexio(int SckCon, char *MisRes)
 {
 	int retornada = 0;
-	if(TCP_TancaSock(SckCon)==-1){
+    if(TCP_TancaSock(SckCon)==-1){
         retornada = -1;
         *MisRes = "ERROR: No s'ha pogut tancar el fitxer\0";
     }
