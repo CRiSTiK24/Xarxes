@@ -248,9 +248,9 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	int retornada = 0;
 	char *buffer = (char*)malloc(1006*sizeof(char));
 	/* Llegeix el missatge del socket 									  */
-	//! TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfaults
+	
     int read = TCP_Rep(SckCon, buffer, 1006);  
-    if(read == -1) 
+    if(read <= 8)//mirem si TCP_Rep ha llegit menys de 8 bytes i per tant hi ha perrill de segfaults
 	{
         retornada = -1;
     }
