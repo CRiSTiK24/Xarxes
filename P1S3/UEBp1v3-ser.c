@@ -7,8 +7,8 @@
 /* servidora de la capa UEB).                                             */
 
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
@@ -42,21 +42,28 @@ int main(int argc,char *argv[])
     int *portTCPcli;
     char *tiposPeticio;
     char *nomFitx;  
- /* Expressions, estructures de control, crides a funcions, etc.          */
-    if(UEBs_IniciaServ(socket, port, missatgeError)==-1){
+	
+	/* Expressions, estructures de control, crides a funcions, etc.       */
+    if(UEBs_IniciaServ(socket, port, missatgeError) == -1) 
+	{
         printf(missatgeError);
     }
-    else{
-        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, missatgeError)==-1){
+    else 
+	{
+        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, missatgeError) == -1) 
+		{
             printf(missatgeError);
         }
-        else{
-            if(UEBs_ServeixPeticio(*socket, tiposPeticio, nomFitx, missatgeError)<0){
+        else 
+		{
+            if(UEBs_ServeixPeticio(*socket, tiposPeticio, nomFitx, missatgeError) < 0) 
+			{
                 printf(missatgeError);
             }
             
         }
-        if(UEBs_TancaConnexio(*socket, missatgeError)==-1){
+        if(UEBs_TancaConnexio(*socket, missatgeError) == -1) 
+		{
             printf(missatgeError);
         }
     }

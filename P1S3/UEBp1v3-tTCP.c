@@ -63,7 +63,10 @@ int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 	adrloc.sin_family = AF_INET;
 	adrloc.sin_port = htons(portTCPloc);
 	adrloc.sin_addr.s_addr = inet_addr(IPloc);
-	for(int i = 0; i < 8; i++){ adrloc.sin_zero[i] = '\0'; }
+	for(int i = 0; i < 8; i++) 
+	{ 
+		adrloc.sin_zero[i] = '\0'; 
+	}
 	if((bind(scon,(struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
 	{
 		return (-1);
@@ -93,7 +96,10 @@ int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 	adrloc.sin_family = AF_INET;
 	adrloc.sin_port = htons(portTCPloc);
 	adrloc.sin_addr.s_addr = inet_addr(IPloc); 
-	for(int i = 0; i < 8; i++){ adrloc.sin_zero[i] = '\0'; }
+	for(int i = 0; i < 8; i++)
+	{ 
+		adrloc.sin_zero[i] = '\0'; 
+	}
 	if((bind(sesc, (struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
 	{
 		return(-1);
@@ -127,7 +133,10 @@ int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 	adrrem.sin_family = AF_INET;
 	adrrem.sin_port = htons(portTCPrem);
 	adrrem.sin_addr.s_addr = inet_addr(IPrem);
-	for(int i = 0; i < 8; i++){ adrrem.sin_zero[i] = '\0'; }
+	for(int i = 0; i < 8; i++)
+	{ 
+		adrrem.sin_zero[i] = '\0'; 
+	}
 	if((connect(Sck,(struct sockaddr*)&adrrem, sizeof(adrrem))) == -1)
 	{
 		return(-1);
@@ -162,10 +171,10 @@ int TCP_AcceptaConnexio(int Sck, char *IPrem, int *portTCPrem)
 	{
 		return(-1);
 	}
-	/* inet_ntoa() converteix l'@IP en format decimal de vector de 	  */
-	/* caràcters 							  */
+	/* inet_ntoa() converteix l'@IP en format decimal de vector de 	  	  */
+	/* caràcters 							  							  */
 	strcpy(IPrem, inet_ntoa(adrrem.sin_addr));
-	/* htons() fa l'operació inversa de htons() 			  */
+	/* htons() fa l'operació inversa de htons() 			  			  */
 	*portTCPrem = ntohs(adrrem.sin_port);
 	return scon;
 }

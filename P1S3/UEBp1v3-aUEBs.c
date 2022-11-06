@@ -5,8 +5,8 @@
 /* cap de transport TCP (fent crides a la "nova" interfície de la         */
 /* capa TCP o "nova" interfície de sockets TCP), en la part servidora.    */
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
@@ -56,15 +56,20 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes)
 {
     const char *IPloc = "0.0.0.0\0";
-    if(portTCPser==0)portTCPser=3000; // llegir port de fitxer en el main
+    if(portTCPser == 0) 
+	{
+		portTCPser = 3000;
+	}		
 	*SckEsc = TCP_CreaSockServidor(IPloc, portTCPser);
-    if(*SckEsc==-1){
+    if(*SckEsc == -1) 
+	{
         char * tmp = "ERROR: El socket ip no s'ha pogut crear\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
         return -1;
     }
-    else{
+    else 
+	{
         char * tmp = "EXIT: El socket s'ha pogut crear\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
@@ -87,25 +92,33 @@ int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes)
 /* Retorna:                                                               */
 /*  l'identificador del socket TCP connectat si tot va bé;                */
 /* -1 si hi ha un error a la interfície de sockets.                       */
-int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli, int *portTCPcli, char *MisRes)
+int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
+						 int *portTCPcli, char *MisRes)
 {
     int retornada;
-    if(TCP_TrobaAdrSockLoc(SckEsc,IPser,portTCPser)==-1 || TCP_TrobaAdrSockRem(SckEsc,IPcli,portTCPcli) ==-1){
-        char * tmp = "ERROR:No s'ha treure les ip i ports del socket\0";
+    if(TCP_TrobaAdrSockLoc(SckEsc,IPser,portTCPser) == -1 || 
+		TCP_TrobaAdrSockRem(SckEsc,IPcli,portTCPcli) == -1) 
+	{
+        char * tmp = "ERROR: No s'ha treure les ip i ports del socket\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
         retornada = -1;
 
     }
-    else{
-        if(TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli) == -1){
-            char * tmp = "ERROR:No s'ha pogut acceptar la conexio entre el Socket local amb IP remota\0";
+    else 
+	{
+        if(TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli) == -1) 
+		{
+            char * tmp = "ERROR: No s'ha pogut acceptar la conexio "
+						 "entre el Socket local amb IP remota\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada = -1;
         }
-        else{
-            char * tmp = "EXIT:S'ha pogut acceptar la conexio entre el Socket local amb Ip remota\0";
+        else 
+		{
+            char * tmp = "EXIT: S'ha pogut acceptar la conexio "
+						 "entre el Socket local amb Ip remota\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
         }
@@ -137,74 +150,84 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 {
     int retornada = 0;
     int* tamanyFitxer;
-    int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx,tamanyFitxer);
-    if(err==-1){
+    int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, tamanyFitxer);
+    if(err == -1) 
+	{
         char * tmp = "ERROR: Interficie socket ha retornat -1\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
         retornada = -1;
     }
-    else if(err==-2){
-        char * tmp = "ERROR: El tipus de peticio no es correcte o El tamany del fitxer no es correcte\0";
+    else if(err == -2) 
+	{
+        char * tmp = "ERROR: El tipus de peticio no es correcte o "
+					 "el tamany del fitxer no es correcte\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
         retornada = -2;
     }
-    //if NomFitx[0] is not '/', return -4
-    else if(NomFitx[0] != '/'){
+    else if(NomFitx[0] != '/') 
+	{
         char * tmp = "ERROR: El nom del fitxer ha de comensar per \0";
         retornada = -4;
     }
-    //create a buffer that adds the currentpath and NomFitx
-    else{
-        int llargadaPath = strlen(getcwd(NULL,0));
-        char* path = malloc(*tamanyFitxer+llargadaPath+1);
-        memcpy(path,getcwd(NULL,0), llargadaPath);
-        memcpy(path+llargadaPath,NomFitx, *tamanyFitxer);
-        memcpy(path+llargadaPath+*tamanyFitxer,'\0',1);//ho convertim en string
+    else 
+	{
+        int llargadaPath = strlen(getcwd(NULL, 0));
+        char* path = malloc(*tamanyFitxer + llargadaPath + 1);
+        memcpy(path, getcwd(NULL, 0), llargadaPath);
+        memcpy(path + llargadaPath, NomFitx, *tamanyFitxer);
+        memcpy(path + llargadaPath + *tamanyFitxer, '\0', 1); // ho convertim en string
         struct stat informacióFitxer;
-        if(stat(path, &informacióFitxer) == -1){
+        if (stat(path, &informacióFitxer) == -1) 
+		{
             char * tmp = "ERROR: El fitxer no existeix\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada =  1;
         }
-        else if(informacióFitxer.st_size > 9999){
+        else if(informacióFitxer.st_size > 9999) 
+		{
             char * tmp = "ERROR: El fitxer es massa gran\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada = -4;
         }
-        else if(informacióFitxer.st_size == 0){
+        else if(informacióFitxer.st_size == 0) 
+		{
             char * tmp = "ERROR: El fitxer esta buit\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada =  -4;
         }
-        else{
-            int fdArchiu=open(path,O_RDONLY);
-            if(fdArchiu==-1){
+        else {
+            int fdArchiu = open(path, O_RDONLY);
+            if(fdArchiu == -1) {
                 retornada = -4;
                 char * tmp = "ERROR: No s'ha pogut obrir el fitxer\0";
                 strncpy(MisRes, tmp, strlen(tmp));
                 MisRes[sizeof MisRes - 1] = '\0';
             }
             char *bufferArchiu = (char*)malloc(9999*sizeof(char));
-            if(read(fdArchiu, bufferArchiu,9999)==-1){
+            if(read(fdArchiu, bufferArchiu, 9999) == -1) 
+			{
                 retornada = -4;
                 char * tmp = "ERROR: No s'ha pogut llegir el fitxer\0";
                 strncpy(MisRes, tmp, strlen(tmp));
                 MisRes[sizeof MisRes - 1] = '\0';
             }
-            else{
+            else 
+			{
                 int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacióFitxer.st_size);
-                if(enviament == -1){
+                if(enviament == -1) 
+				{
                     char * tmp = "ERROR: a la interficie de sockets\0";
                     strncpy(MisRes, tmp, strlen(tmp));
                     MisRes[sizeof MisRes - 1] = '\0';
                     retornada = -1;
                 }
-                else{
+                else 
+				{
                     char * tmp = "EXIT: S'ha enviat el missatge \0";
                     strncpy(MisRes, tmp, strlen(tmp));
                     MisRes[sizeof MisRes - 1] = '\0';
@@ -229,13 +252,15 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 int UEBs_TancaConnexio(int SckCon, char *MisRes)
 {
     int retornada = 0;
-    if(TCP_TancaSock(SckCon)==-1){
+    if(TCP_TancaSock(SckCon) == -1) 
+	{
         retornada = -1;
         char * tmp = "ERROR: No s'ha pogut tancar el fitxer\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
     }
-    else{
+    else 
+	{
         char * tmp = "EXIT: S'ha pogut tancar el fitxer\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
@@ -279,14 +304,15 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
     int retornada = 0;
 	char *buffer = (char*)malloc((7+long1)*sizeof(char));
-    memcpy(buffer,tipus, 3);
+    memcpy(buffer, tipus, 3);
     char * longitud;
     sprintf(longitud, "%.4d", long1);
-    memcpy(buffer+3,longitud,4);
-    memcpy(buffer+7,info1,long1);
-    if(TCP_Envia(SckCon, buffer, 7+long1)==-1){
+    memcpy(buffer+3, longitud, 4);
+    memcpy(buffer+7, info1, long1);
+    if(TCP_Envia(SckCon, buffer, 7+long1) == -1) 
+	{
         retornada = -1;
-    }
+	}
     return retornada;
 }
 
@@ -309,32 +335,39 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
     int retornada = 0;
 	char *buffer = (char*)malloc(1006*sizeof(char));
-    //read the message from the socket
-    int read = TCP_Rep(SckCon, buffer, 1006);  //TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
-    //if read is -1, return -1
-    if(read == -1){
-        int retornada = -1;
+    // Llegeix el missatge del socket
+	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
+    int read = TCP_Rep(SckCon, buffer, 1006);  
+    if(read == -1) 
+	{
+        retornada = -1;
     }
-    else{
-        //save in TiposPeticio the substring of the buffer from 0 to 2
+    else 
+	{
+		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
-        if(tipus!="OBT"){
-            int retornada = -2;
+        if(tipus != "OBT") 
+		{
+            retornada = -2;
         }
-        else{
-            //save in a new string called tamanyFitxer the substring from 3 to 7 of buffer
+        else 
+		{
+			/* Guarda en una nova string tamanyFitxer una substring del   */
+			/* char 3 al 7 del buffer								      */
             char *tamanyFitxer;
             memcpy(tamanyFitxer, buffer+3, 5);
-            //convert tamanyFitxer to int
+			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
-            //if tamanyFitxer is 0 or a number, return -2
-            for(int i = 0; i<4; i++){
-                if(tamanyFitxer[i]<='0' || tamanyFitxer[i]>'9'){
-                    int retornada = -2;
-                }
-            }
-            //read tamanyFitxer chars from buffer and save it in NomFitx
+            for(int i = 0; i < 4; i++)
+			{
+                if(tamanyFitxer[i] <= '0' || tamanyFitxer[i] > '9') 
+				{
+                    retornada = -2;
+				}
+			}
+            /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
+			/* guarda a NomFitx 										  */
             memcpy(info1, buffer+8, *long1);
         }
     }

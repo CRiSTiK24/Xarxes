@@ -6,8 +6,8 @@
 /* (la part client de) UEB (fent crides a la interfície de la part        */
 /* client de la capa UEB).                                                */
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
@@ -29,7 +29,7 @@
 
 int main(int argc,char *argv[])
 {
- /* Declaració de variables, p.e., int n;                                 */
+	/* Declaració de variables, p.e., int n;                              */
     int* socket;
     int port = 3000; // despres farem que es llegeixi de fitxer
     char* missatgeError = malloc(200);
@@ -42,15 +42,19 @@ int main(int argc,char *argv[])
     char *fitxer;
     int *longFitx;
 
- /* Expressions, estructures de control, crides a funcions, etc.          */
-    if(UEBc_DemanaConnexio(IPcli,port, IPser, portTCPser, missatgeError)==-1){
+	/* Expressions, estructures de control, crides a funcions, etc.       */
+    if(UEBc_DemanaConnexio(IPcli,port, IPser, portTCPser, missatgeError) == -1) 
+	{
         printf(missatgeError);
     }
-    else{
-        if(UEBc_ObteFitxer(*socket,nomFitx,fitxer,longFitx,missatgeError)==-1){
+    else 
+	{
+        if(UEBc_ObteFitxer(*socket,nomFitx,fitxer,longFitx,missatgeError) == -1) 
+		{
             printf(missatgeError);
         }
-        if(UEBc_TancaConnexio(*socket,missatgeError)==-1){
+        if(UEBc_TancaConnexio(*socket,missatgeError) == -1) 
+		{
             printf(missatgeError);
         }
     }
