@@ -3,8 +3,8 @@
 /* P1 - UEB amb sockets TCP/IP - Part I                                   */
 /* Fitxer capçalera de tTCP.c                                             */
 /*                                                                        */
-/* Autors:                                                                */
-/* Data:                                                                  */
+/* Autors: Cristian Bezerdic Stoica, Guillem Díaz Cabanas                 */
+/* Data: 08/11/2022                                                       */
 /*                                                                        */
 /**************************************************************************/
 
