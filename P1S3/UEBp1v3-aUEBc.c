@@ -16,6 +16,8 @@
 
 #include "UEBp1v3-tTCP.h"
 #include "string.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 /* Definició de constants, p.e.,                                          */
 
@@ -53,25 +55,33 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, int *portTCPcli, char *MisRes)
 {
     int retornada = 0;
-	int socket = TCP_CreaSockClient("0.0.0.0", "0");
+	int socket = TCP_CreaSockClient("0.0.0.0", portTCPser);
     if(socket==-1){
         retornada = -1;
-        *MisRes = "Hi ha hagut un error al crear el socket Client \0";
+        char *tmp = "Hi ha hagut un error al crear el socket Client \0";
+        strncpy(MisRes, tmp, strlen(tmp));
+        MisRes[sizeof MisRes - 1] = '\0';
     }
     else{
         int conexioCorrecte = TCP_DemanaConnexio(socket, IPser, portTCPser);
         if(conexioCorrecte == -1){
             retornada = -1;
-            *MisRes = "Hi ha hagut un error al crear la connexió amb el servidor \0";
+            char * tmp = "Hi ha hagut un error al crear la connexió amb el servidor \0";
+            strncpy(MisRes, tmp, strlen(tmp));
+            MisRes[sizeof MisRes - 1] = '\0';
         }
         else{
-            if(TCP_TrobaAdrSockLoc(socket,IPcli,portTCPcli)==-1 || TCP_TrobaAdrSockRem(socket,IPser,portTCPser) ==-1){
-                *MisRes = "ERROR:No s'ha treure les ip i ports del socket\0";
+            if(TCP_TrobaAdrSockLoc(socket,IPcli,portTCPcli)==-1){
+                char * tmp = "ERROR:No s'ha treure les ip i ports del socket\0";
+                strncpy(MisRes, tmp, strlen(tmp));
+                MisRes[sizeof MisRes - 1] = '\0';
                 retornada = -1;
 
             }
             else{
-                *MisRes = "EXIT:S'ha pogut demanar la conexio entre el Socket local amb Ip remota\0";
+                char * tmp = "EXIT:S'ha pogut demanar la conexio entre el Socket local amb Ip remota\0";
+                strncpy(MisRes, tmp, strlen(tmp));
+                MisRes[sizeof MisRes - 1] = '\0';
             }
 
         }
@@ -103,19 +113,24 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx, 
     int llargadaPath = strlen(NomFitx);
     if(llargadaPath >10000 || llargadaPath <= 0){
         retornada = -2;
-        *MisRes = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
-        //o també MisRes = (char*)"ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+        char * tmp = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+        strncpy(MisRes, tmp, strlen(tmp));
+        MisRes[sizeof MisRes - 1] = '\0';
     }
     else{
         if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1){
             retornada = -1;
-            *MisRes = "ERROR: No s'ha pogut construir i enviar el missatge\0";
+            char * tmp = "ERROR: No s'ha pogut construir i enviar el missatge\0";
+            strncpy(MisRes, tmp, strlen(tmp));
+            MisRes[sizeof MisRes - 1] = '\0';
         }
         else{
             char* tipus = (char*)malloc(4*sizeof(char));
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx)==-1){
                 retornada = -1;
-                *MisRes = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
+                char * tmp = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
+                strncpy(MisRes, tmp, strlen(tmp));
+                MisRes[sizeof MisRes - 1] = '\0';
             }
         }
     }
@@ -136,10 +151,14 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
 	int retornada = 0;
     if(TCP_TancaSock(SckCon)==-1){
         retornada = -1;
-        *MisRes = "ERROR: No s'ha pogut tancar el fitxer\0";
+        char * tmp = "ERROR: No s'ha pogut tancar el fitxer\0";
+        strncpy(MisRes, tmp, strlen(tmp));
+        MisRes[sizeof MisRes - 1] = '\0';
     }
     else{
-        *MisRes = "EXIT: S'ha pogut tancar el fitxer\0";
+        char * tmp = "EXIT: S'ha pogut tancar el fitxer\0";
+        strncpy(MisRes, tmp, strlen(tmp));
+        MisRes[sizeof MisRes - 1] = '\0';
     }
     return retornada;
 }

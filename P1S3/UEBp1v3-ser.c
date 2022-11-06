@@ -15,6 +15,10 @@
 /* Inclusió de llibreries, p.e. #include <stdio.h> o #include "meu.h"     */
 
 #include "UEBp1v3-aUEBs.h"
+#include <unistd.h>
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
 
 /* Definició de constants, p.e.,                                          */
 
@@ -37,22 +41,22 @@ int main(int argc,char *argv[])
     char *IPcli;
     int *portTCPcli;
     char *tiposPeticio;
-    char *nomFitx;    
+    char *nomFitx;  
  /* Expressions, estructures de control, crides a funcions, etc.          */
     if(UEBs_IniciaServ(socket, port, missatgeError)==-1){
         printf(missatgeError);
     }
     else{
-        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, MisRes)==-1){
+        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, missatgeError)==-1){
             printf(missatgeError);
         }
         else{
-            if(UEBs_ServeixPeticio(*socket, tipusPeticio, nomFitx, MisRes)<0){
+            if(UEBs_ServeixPeticio(*socket, tiposPeticio, nomFitx, missatgeError)<0){
                 printf(missatgeError);
             }
             
         }
-        if(UEBs_TancaConnexio(*socket, MisRes)==-1){
+        if(UEBs_TancaConnexio(*socket, missatgeError)==-1){
             printf(missatgeError);
         }
     }
