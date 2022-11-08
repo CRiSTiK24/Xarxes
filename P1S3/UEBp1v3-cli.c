@@ -35,7 +35,7 @@ int main(int argc,char *argv[])
     char missatgeError[200];
     char IPser[16];
     int *portTCPser;
-    char IPcli[16]; = "0.0.0.0\0"; // TODO: fer que es llegeixi de teclat
+    char IPcli[16] = "0.0.0.0\0"; // TODO: fer que es llegeixi de teclat
     int *portTCPcli;
     char tiposPeticio[4];
     char nomFitx[10000] = "/patata\0"; //TODO: fer que es llegeixi de teclat
