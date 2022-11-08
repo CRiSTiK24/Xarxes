@@ -44,7 +44,7 @@ int main(int argc,char *argv[])
     char nomFitx[10000];  
 	
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(UEBs_IniciaServ(socket, port, missatgeError) == -1) 
+    if(UEBs_IniciaServ(&socket, port, missatgeError) == -1) 
 	{
         printf(missatgeError);
     }

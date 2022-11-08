@@ -49,11 +49,11 @@ int main(int argc,char *argv[])
     }
     else 
 	{
-        if(UEBc_ObteFitxer(&socket,nomFitx,fitxer,longFitx,missatgeError) == -1) 
+        if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1) 
 		{
             printf(missatgeError);
         }
-        if(UEBc_TancaConnexio(&socket,missatgeError) == -1) 
+        if(UEBc_TancaConnexio(socket,missatgeError) == -1) 
 		{
             printf(missatgeError);
         }
