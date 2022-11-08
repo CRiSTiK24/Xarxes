@@ -33,14 +33,14 @@
 int main(int argc,char *argv[])
 {
  /* Declaració de variables, p.e., int n;                                */
-    int* socket;
+    int socket;
     int port = 3000; // despres farem que es llegeixi de fitxer
     char missatgeError[200];
     char IPser[16];
-    int *portTCPser;
+    int portTCPser;
     char IPcli[16];
-    int *portTCPcli;
-    char tiposPeticio[4];
+    int portTCPcli;
+    char tipusPeticio[4];
     char nomFitx[10000];  
 	
 	/* Expressions, estructures de control, crides a funcions, etc.       */
@@ -50,19 +50,19 @@ int main(int argc,char *argv[])
     }
     else 
 	{
-        if(UEBs_AcceptaConnexio(*socket, IPser, portTCPser, IPcli, portTCPcli, missatgeError) == -1) 
+        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }
         else 
 		{
-            if(UEBs_ServeixPeticio(*socket, tiposPeticio, nomFitx, missatgeError) < 0) 
+            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, missatgeError) < 0) 
 			{
                 printf(missatgeError);
             }
             
         }
-        if(UEBs_TancaConnexio(*socket, missatgeError) == -1) 
+        if(UEBs_TancaConnexio(socket, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }

@@ -53,17 +53,17 @@
 /* -1 si hi ha error.                                                     */
 int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 {
-	int scon;
+	int scon, i;
 	if((scon = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		return(-1);
 	}
-	/* Assignem @IP i #port TCP al socket				  */
+	/* Assignem @IP i #port TCP al socket				  				  */
 	struct sockaddr_in adrloc;
 	adrloc.sin_family = AF_INET;
 	adrloc.sin_port = htons(portTCPloc);
 	adrloc.sin_addr.s_addr = inet_addr(IPloc);
-	for(int i = 0; i < 8; i++) 
+	for(i = 0; i < 8; i++) 
 	{ 
 		adrloc.sin_zero[i] = '\0'; 
 	}
@@ -87,7 +87,7 @@ int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 /* -1 si hi ha error.                                                     */
 int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 {
-	int sesc;
+	int sesc, i;
 	if((sesc = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		return(-1);
@@ -96,21 +96,21 @@ int TCP_CreaSockServidor(const char *IPloc, int portTCPloc)
 	adrloc.sin_family = AF_INET;
 	adrloc.sin_port = htons(portTCPloc);
 	adrloc.sin_addr.s_addr = inet_addr(IPloc); 
-	for(int i = 0; i < 8; i++)
+	for(i = 0; i < 8; i++)
 	{ 
 		adrloc.sin_zero[i] = '\0'; 
 	}
 	if((bind(sesc, (struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
 	{
 		return(-1);
-	}
-	/* Es crea una cua per emmagatzemar peticions de connexió         */
-	/* pendents.   							  */
+	}    
+	/* Es crea una cua per emmagatzemar peticions de connexió             */
+	/* pendents.   							  						      */
 	if((listen(sesc, 3)) == -1)
 	{
 		return(-1);
 	}
-	/* Un cop fet listen() es diu que sesc és un socket "d'escolta".  */
+	/* Un cop fet listen() es diu que sesc és un socket "d'escolta".      */
 	return sesc;
 }
 
@@ -133,7 +133,8 @@ int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 	adrrem.sin_family = AF_INET;
 	adrrem.sin_port = htons(portTCPrem);
 	adrrem.sin_addr.s_addr = inet_addr(IPrem);
-	for(int i = 0; i < 8; i++)
+	int i;
+	for(i = 0; i < 8; i++)
 	{ 
 		adrrem.sin_zero[i] = '\0'; 
 	}
@@ -141,8 +142,8 @@ int TCP_DemanaConnexio(int Sck, const char *IPrem, int portTCPrem)
 	{
 		return(-1);
 	}
-	/* Un cop fet connect() es diu que el socket scon està            */
-	/* "connectat" al socket remot. 				  */
+	/* Un cop fet connect() es diu que el socket scon està            	  */
+	/* "connectat" al socket remot. 				 					  */
 	return 0;
 }
 

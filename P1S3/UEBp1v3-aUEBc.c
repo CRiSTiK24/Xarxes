@@ -271,7 +271,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
             memcpy(tamanyFitxer, buffer+3, 5);
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
-            for(int i = 0; i < 4; i++) 
+			int i;
+            for(i = 0; i < 4; i++) 
 			{
                 if(tamanyFitxer[i] <= '0' || tamanyFitxer[i] > '9') 
 				{

@@ -168,7 +168,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     }
     else if(NomFitx[0] != '/') 
 	{
-        char tmp[200] = "ERROR: El nom del fitxer ha de comensar per \0";
+        char tmp[200] = "ERROR: El nom del fitxer ha de començar per \0";
         retornada = -4;
     }
     else 
@@ -177,23 +177,23 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
         char path[10000];
         memcpy(path, getcwd(NULL, 0), llargadaPath);
         memcpy(path + llargadaPath, NomFitx, *tamanyFitxer);
-        path[llargadaPath+*tamanyFitxer] = '\0';
-        struct stat informacióFitxer;
-        if (stat(path, &informacióFitxer) == -1) 
+        memcpy(path + llargadaPath + *tamanyFitxer, '\0', 1); // ho convertim en string
+        struct stat informacioFitxer;
+        if (stat(path, &informacioFitxer) == -1) 
 		{
             char tmp[200] = "ERROR: El fitxer no existeix\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada =  1;
         }
-        else if(informacióFitxer.st_size > 9999) 
+        else if(informacioFitxer.st_size > 9999) 
 		{
             char tmp[200] = "ERROR: El fitxer es massa gran\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
             retornada = -4;
         }
-        else if(informacióFitxer.st_size == 0) 
+        else if(informacioFitxer.st_size == 0) 
 		{
             char tmp[200] = "ERROR: El fitxer esta buit\0";
             strncpy(MisRes, tmp, strlen(tmp));
@@ -218,7 +218,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
             }
             else 
 			{
-                int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacióFitxer.st_size);
+                int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacioFitxer.st_size);
                 if(enviament == -1) 
 				{
                     char tmp[200] = "ERROR: a la interficie de sockets\0";
@@ -359,7 +359,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
             memcpy(tamanyFitxer, buffer+3, 5);
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
-            for(int i = 0; i < 4; i++)
+			int i;
+            for(i = 0; i < 4; i++)
 			{
                 if(tamanyFitxer[i] <= '0' || tamanyFitxer[i] > '9') 
 				{
