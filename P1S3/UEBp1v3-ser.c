@@ -35,13 +35,13 @@ int main(int argc,char *argv[])
  /* Declaració de variables, p.e., int n;                                */
     int* socket;
     int port = 3000; // despres farem que es llegeixi de fitxer
-    char* missatgeError = malloc(200);
-    char *IPser;
+    char missatgeError[200];
+    char IPser[16];
     int *portTCPser;
-    char *IPcli;
+    char IPcli[16];
     int *portTCPcli;
-    char *tiposPeticio;
-    char *nomFitx;  
+    char tiposPeticio[4];
+    char nomFitx[10000];  
 	
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBs_IniciaServ(socket, port, missatgeError) == -1) 

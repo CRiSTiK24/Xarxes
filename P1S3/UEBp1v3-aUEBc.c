@@ -60,7 +60,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
     if(socket == -1) 
 	{
         retornada = -1;
-        char *tmp = "Hi ha hagut un error al crear el socket Client \0";
+        char tmp[200] = "Hi ha hagut un error al crear el socket Client \0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
     }
@@ -70,7 +70,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
         if(conexioCorrecte == -1) 
 		{
             retornada = -1;
-            char * tmp = 
+            char tmp[200] =
 				"Hi ha hagut un error al crear la connexió amb el servidor \0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
@@ -79,7 +79,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 		{
             if(TCP_TrobaAdrSockLoc(socket, IPcli, portTCPcli) == -1) 
 			{
-                char * tmp = "ERROR: No s'ha treure les ip i ports del socket\0";
+                char tmp[200] = "ERROR: No s'ha treure les ip i ports del socket\0";
                 strncpy(MisRes, tmp, strlen(tmp));
                 MisRes[sizeof MisRes - 1] = '\0';
                 retornada = -1;
@@ -87,7 +87,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
             }
             else 
 			{
-                char * tmp = "EXIT: S'ha pogut demanar la conexio entre el "
+                char tmp[200] = "EXIT: S'ha pogut demanar la conexio entre el "
 							 "Socket local amb Ip remota\0";
                 strncpy(MisRes, tmp, strlen(tmp));
                 MisRes[sizeof MisRes - 1] = '\0';
@@ -124,7 +124,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
     if(llargadaPath > 10000 || llargadaPath <= 0) 
 	{
         retornada = -2;
-        char * tmp = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+        char tmp[200] = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
     }
@@ -133,17 +133,17 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
         if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1) 
 		{
             retornada = -1;
-            char * tmp = "ERROR: No s'ha pogut construir i enviar el missatge\0";
+            char tmp[200] = "ERROR: No s'ha pogut construir i enviar el missatge\0";
             strncpy(MisRes, tmp, strlen(tmp));
             MisRes[sizeof MisRes - 1] = '\0';
         }
         else 
 		{
-            char* tipus = (char*)malloc(4*sizeof(char));
+            char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
                 retornada = -1;
-                char * tmp = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
+                char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
                 strncpy(MisRes, tmp, strlen(tmp));
                 MisRes[sizeof MisRes - 1] = '\0';
             }
@@ -167,13 +167,13 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
     if(TCP_TancaSock(SckCon) == -1) 
 	{
         retornada = -1;
-        char * tmp = "ERROR: No s'ha pogut tancar el fitxer\0";
+        char tmp[200] = "ERROR: No s'ha pogut tancar el fitxer\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
     }
     else 
 	{
-        char * tmp = "EXIT: S'ha pogut tancar el fitxer\0";
+        char tmp[200] = "EXIT: S'ha pogut tancar el fitxer\0";
         strncpy(MisRes, tmp, strlen(tmp));
         MisRes[sizeof MisRes - 1] = '\0';
     }
@@ -215,7 +215,7 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
 int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
     int retornada = 0;
-	char *buffer = (char*)malloc((7+long1)*sizeof(char));
+	char buffer[17+long1];
     memcpy(buffer, tipus, 3);
     char * longitud;
     sprintf(longitud, "%.4d", long1);
@@ -246,7 +246,7 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
 	int retornada = 0;
-	char *buffer = (char*)malloc(1006*sizeof(char));
+	char buffer[1006];
 	/* Llegeix el missatge del socket 									  */
 	
     int read = TCP_Rep(SckCon, buffer, 1006);  
@@ -256,8 +256,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     }
     else 
 	{
-		/* Guarda a tipus una substring del buffer del char 0 al 3 	      */
-        memcpy(tipus, buffer, 4);
+		/* Guarda a tipus una substring del buffer del char 0 al 4 	      */
+        memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
         if(strcmp(tipus,"COR\0")!=0 || strcmp(tipus,"ERR\0")!=0)
 		{
@@ -267,7 +267,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		{
 			/* Guarda en una nova string tamanyFitxer una substring del   */
 			/* char 3 al 7 del buffer								      */
-            char *tamanyFitxer;
+            char tamanyFitxer[5];
             memcpy(tamanyFitxer, buffer+3, 5);
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
