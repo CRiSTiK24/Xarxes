@@ -174,7 +174,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     else 
 	{
         int llargadaPath = strlen(getcwd(NULL, 0));
-        char* path;
+        char path[10000];
         memcpy(path, getcwd(NULL, 0), llargadaPath);
         memcpy(path + llargadaPath, NomFitx, *tamanyFitxer);
         memcpy(path + llargadaPath + *tamanyFitxer, '\0', 1); // ho convertim en string
