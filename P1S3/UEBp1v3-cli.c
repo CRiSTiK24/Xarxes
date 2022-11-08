@@ -38,7 +38,7 @@ int main(int argc,char *argv[])
     char IPcli[16]; = "0.0.0.0\0"; // TODO: fer que es llegeixi de teclat
     int *portTCPcli;
     char tiposPeticio[4];
-    char nomFitx[10000] = "/patata\0"; //TODO: fer que es lelgeixi de teclat
+    char nomFitx[10000] = "/patata\0"; //TODO: fer que es llegeixi de teclat
     char fitxer[10000];
     int *longFitx;
 
