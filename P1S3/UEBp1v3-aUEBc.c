@@ -15,9 +15,9 @@
 /*   un #include del propi fitxer capçalera)                              */
 
 #include "UEBp1v3-tTCP.h"
-#include "string.h"
-#include "stdlib.h"
-#include "stdio.h"
+#include<string.h>
+#include<stdlib.h>
+#include<stdio.h>
 
 /* Definició de constants, p.e.,                                          */
 
@@ -256,10 +256,10 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     }
     else 
 	{
-		/* Guarda a tipus una substring del buffer del char 0 al 2 	      */
-        memcpy(tipus, buffer, 3);
+		/* Guarda a tipus una substring del buffer del char 0 al 3 	      */
+        memcpy(tipus, buffer, 4);
         tipus[3] = '\0';
-        if(tipus != "COR"|| tipus != "ERR") 
+        if(strcmp(tipus,"COR\0")!=0 || strcmp(tipus,"ERR\0")!=0)
 		{
             retornada = -2;
         }

@@ -32,7 +32,7 @@ int main(int argc,char *argv[])
 	/* Declaració de variables, p.e., int n;                              */
     int* socket;
     int port = 3000; // despres farem que es llegeixi de fitxer
-    char* missatgeError = malloc(200);
+    char* missatgeError;
     char *IPser;
     int *portTCPser;
     char *IPcli = "0.0.0.0\0";

@@ -16,11 +16,11 @@
 
 #include "UEBp1v3-tTCP.h"
 #include <unistd.h>
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "sys/stat.h"
-#include "sys/types.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <fcntl.h> 
 
 
@@ -345,9 +345,9 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     else 
 	{
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
-        memcpy(tipus, buffer, 3);
+        memcpy(tipus, buffer, 4);
         tipus[3] = '\0';
-        if(tipus != "OBT") 
+        if(strcmp(tipus,"OBT\0")!=0)
 		{
             retornada = -2;
         }
