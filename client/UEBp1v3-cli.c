@@ -31,7 +31,7 @@ int main(int argc,char *argv[])
 {
 	/* Declaració de variables, p.e., int n;                              */
     int socket;
-    int port = 3005; // despres farem que es llegeixi de fitxer
+    int port = 2340; // despres farem que es llegeixi de fitxer
     char missatgeError[200];
     char IPser[16];
     int portTCPser;
