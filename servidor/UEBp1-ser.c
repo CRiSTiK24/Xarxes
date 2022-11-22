@@ -14,7 +14,7 @@
 
 /* Inclusió de llibreries, p.e. #include <stdio.h> o #include "meu.h"     */
 
-#include "UEBp1v3-aUEBs.h"
+#include "UEBp1-aUEBs.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -45,7 +45,7 @@ int main(int argc,char *argv[])
 
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(UEBs_IniciaServ(&socket, port, &missatgeError) == -1) 
+    if(UEBs_IniciaServ(&socket, port, missatgeError) == -1) 
 	{
         printf(missatgeError);
     }
@@ -53,19 +53,19 @@ int main(int argc,char *argv[])
 	{
 
         printf("La ip del servidor és %s i el port %d",IPser,portTCPser);
-        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, &missatgeError) == -1) 
+        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }
         else 
 		{
-            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, &missatgeError) < 0) 
+            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, missatgeError) < 0) 
 			{
                 printf(missatgeError);
             }
             
         }
-        if(UEBs_TancaConnexio(socket, &missatgeError) == -1) 
+        if(UEBs_TancaConnexio(socket, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }

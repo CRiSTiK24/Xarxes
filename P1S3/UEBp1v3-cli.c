@@ -13,7 +13,7 @@
 
 /* Inclusió de llibreries, p.e. #include <stdio.h> o #include "meu.h"     */
 
-#include "UEBp1v3-aUEBc.h"
+#include "UEBp1-aUEBc.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -42,6 +42,7 @@ int main(int argc,char *argv[])
     char fitxer[10000];
     int longFitx;
 
+    
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBc_DemanaConnexio(IPcli,port, IPser, &portTCPser, missatgeError) == -1) 
 	{

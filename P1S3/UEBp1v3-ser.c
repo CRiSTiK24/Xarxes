@@ -44,25 +44,25 @@ int main(int argc,char *argv[])
     char nomFitx[10000];  
 	
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(UEBs_IniciaServ(&socket, port, &missatgeError) == -1) 
+    if(UEBs_IniciaServ(&socket, port, missatgeError) == -1) 
 	{
         printf(missatgeError);
     }
     else 
 	{
-        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, &missatgeError) == -1) 
+        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }
         else 
 		{
-            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, &missatgeError) < 0) 
+            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, missatgeError) < 0) 
 			{
                 printf(missatgeError);
             }
             
         }
-        if(UEBs_TancaConnexio(socket, &missatgeError) == -1) 
+        if(UEBs_TancaConnexio(socket, missatgeError) == -1) 
 		{
             printf(missatgeError);
         }

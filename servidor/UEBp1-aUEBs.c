@@ -14,7 +14,7 @@
 /*  (si les funcions externes es cridessin entre elles, faria falta fer   */
 /*   un #include del propi fitxer capçalera)                              */
 
-#include "UEBp1v3-tTCP.h"
+#include "UEBp1-tTCP.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>

@@ -45,17 +45,17 @@ int main(int argc,char *argv[])
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBc_DemanaConnexio(IPcli,port, IPser, &portTCPser, missatgeError) == -1) 
 	{
-        printf(missatgeError);
+        printf("%s\0",missatgeError);
     }
     else 
 	{
         if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1) 
 		{
-            printf(missatgeError);
+            printf("%s\0",missatgeError);
         }
         if(UEBc_TancaConnexio(socket,missatgeError) == -1) 
 		{
-            printf(missatgeError);
+            printf("%s\0",missatgeError);
         }
     }
     return 0;
