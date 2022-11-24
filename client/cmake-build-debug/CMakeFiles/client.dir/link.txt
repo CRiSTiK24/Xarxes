@@ -1,0 +1,1 @@
+/usr/bin/cc -g "CMakeFiles/client.dir/UEBp1-aUEBc.c.o" "CMakeFiles/client.dir/UEBp1-cli.c.o" "CMakeFiles/client.dir/UEBp1-tTCP.c.o" -o client 

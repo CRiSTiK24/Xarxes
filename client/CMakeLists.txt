@@ -3,4 +3,4 @@ project(server C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(client UEBp1v3-aUEBc.c UEBp1v3-cli.c UEBp1v3-tTCP.c)
+add_executable(client UEBp1-aUEBc.c UEBp1-cli.c UEBp1-tTCP.c)
