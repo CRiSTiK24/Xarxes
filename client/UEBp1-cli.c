@@ -31,31 +31,30 @@ int main(int argc,char *argv[])
 {
 	/* Declaració de variables, p.e., int n;                              */
     int socket;
-    int port = 2340; // despres farem que es llegeixi de fitxer
     char missatgeError[200];
-    char IPser[16];
+    char IPser[16] = "0.0.0.0\0"; // TODO: fer que es llegeixi de teclat
     int portTCPser;
-    char IPcli[16] = "0.0.0.0\0"; // TODO: fer que es llegeixi de teclat
-    int portTCPcli;
-    char tiposPeticio[4];
+    char IPcli[16] = "0.0.0.0\0";
+    int portTCPcli = 45456; // despres farem que es llegeixi de fitxer
+    //char tiposPeticio[4] = "OBT\0";
     char nomFitx[10000] = "/patata\0"; //TODO: fer que es llegeixi de teclat
     char fitxer[10000];
     int longFitx;
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(UEBc_DemanaConnexio(IPcli,port, IPser, &portTCPser, missatgeError) == -1) 
+    if(UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError) == -1)
 	{
-        printf("%s\0",missatgeError);
+        printf("%s",missatgeError);
     }
     else 
 	{
-        if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1) 
+        if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1)
 		{
-            printf("%s\0",missatgeError);
+            printf("%s",missatgeError);
         }
-        if(UEBc_TancaConnexio(socket,missatgeError) == -1) 
+        if(UEBc_TancaConnexio(socket,missatgeError) == -1)
 		{
-            printf("%s\0",missatgeError);
+            printf("%s",missatgeError);
         }
     }
     return 0;
