@@ -61,7 +61,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 	{
         retornada = -1;
         char tmp[200] = "Hi ha hagut un error al crear el socket Client \0";
-        
+
         strcpy(MisRes, tmp);
     }
     else 
