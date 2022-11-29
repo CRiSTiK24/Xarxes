@@ -39,22 +39,22 @@ int main(int argc,char *argv[])
     //char tiposPeticio[4] = "OBT\0";
     char nomFitx[10000] = "/patata\0"; //TODO: fer que es llegeixi de teclat
     char fitxer[10000];
-    int longFitx;
+    int longFitx = 0;
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError) == -1)
 	{
-        printf("%s",missatgeError);
+        printf("%s\n",missatgeError);
     }
     else 
 	{
         if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1)
 		{
-            printf("%s",missatgeError);
+            printf("%s\n",missatgeError);
         }
         if(UEBc_TancaConnexio(socket,missatgeError) == -1)
 		{
-            printf("%s",missatgeError);
+            printf("%s\n",missatgeError);
         }
     }
     return 0;

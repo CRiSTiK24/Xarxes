@@ -46,27 +46,29 @@ int main(int argc,char *argv[])
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBs_IniciaServ(&socket, portTCPser, missatgeError) == -1)
 	{
-        printf("%s",missatgeError);
+        printf("%s\n",missatgeError);
     }
     else 
 	{
 
-        printf("La ip del servidor és %s i el port %d",IPser,portTCPser);
+        printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
         if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1)
 		{
-            printf("%s",missatgeError);
+            printf("Error al acceptar connexió\n\0");
+            printf("%s\n",missatgeError);
         }
         else 
 		{
             if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, missatgeError) < 0)
 			{
-                printf("%s",missatgeError);
+                printf("Error al servir petició\n\0");
+                printf("%s\n",missatgeError);
             }
             
         }
         if(UEBs_TancaConnexio(socket, missatgeError) == -1)
 		{
-            printf("%s",missatgeError);
+            printf("%s\n",missatgeError);
         }
     }
     return 0;

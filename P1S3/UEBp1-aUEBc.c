@@ -62,7 +62,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
         retornada = -1;
         char tmp[200] = "Hi ha hagut un error al crear el socket Client \0";
         strcpy(MisRes,tmp);
-        MisRes[sizeof MisRes - 1] = '\0';
+        MisRes[199] = '\0';
     }
     else 
 	{
@@ -73,7 +73,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
             char tmp[200] =
 				"Hi ha hagut un error al crear la connexió amb el servidor \0";
             strcpy(MisRes,tmp);
-            MisRes[sizeof MisRes - 1] = '\0';
+            MisRes[199] = '\0';
         }
         else 
 		{
@@ -81,7 +81,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 			{
                 char tmp[200] = "ERROR: No s'ha treure les ip i ports del socket\0";
                 strcpy(MisRes,tmp);
-                MisRes[sizeof MisRes - 1] = '\0';
+                MisRes[199] = '\0';
                 retornada = -1;
 
             }
@@ -90,7 +90,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
                 char tmp[200] = "EXIT: S'ha pogut demanar la conexio entre el "
 							 "Socket local amb Ip remota\0";
                 strcpy(MisRes,tmp);
-                MisRes[sizeof MisRes - 1] = '\0';
+                MisRes[199] = '\0';
             }
 
         }
@@ -126,7 +126,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
         retornada = -2;
         char tmp[200] = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
         strcpy(MisRes,tmp);
-        MisRes[sizeof MisRes - 1] = '\0';
+        MisRes[199] = '\0';
     }
     else 
 	{
@@ -135,7 +135,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
             retornada = -1;
             char tmp[200] = "ERROR: No s'ha pogut construir i enviar el missatge\0";
             strcpy(MisRes,tmp);
-            MisRes[sizeof MisRes - 1] = '\0';
+            MisRes[199] = '\0';
         }
         else 
 		{
@@ -145,7 +145,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
                 retornada = -1;
                 char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
                 strcpy(MisRes,tmp);
-                MisRes[sizeof MisRes - 1] = '\0';
+                MisRes[199] = '\0';
             }
         }
     }
@@ -169,13 +169,13 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
         retornada = -1;
         char tmp[200] = "ERROR: No s'ha pogut tancar el fitxer\0";
         strcpy(MisRes,tmp);
-        MisRes[sizeof MisRes - 1] = '\0';
+        MisRes[199] = '\0';
     }
     else 
 	{
         char tmp[200] = "EXIT: S'ha pogut tancar el fitxer\0";
         strcpy(MisRes,tmp);
-        MisRes[sizeof MisRes - 1] = '\0';
+        MisRes[199] = '\0';
     }
     return retornada;
 }

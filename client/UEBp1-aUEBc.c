@@ -130,8 +130,10 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
     }
     else 
 	{
+        printf("3\n");
         if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1) 
 		{
+            printf("4\n");
             retornada = -1;
             char tmp[200] = "ERROR: No s'ha pogut construir i enviar el missatge\0";
             strcpy(MisRes,tmp);
@@ -139,6 +141,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
         }
         else 
 		{
+            printf("5\n");
             char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
@@ -217,9 +220,10 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
     int retornada = 0;
 	char buffer[17+long1];
     memcpy(buffer, tipus, 3);
-    char * longitud;
-    sprintf(longitud, "%.4d", long1);
-    memcpy(buffer+3, longitud, 4);
+    char charLong[5];
+    sprintf(charLong, "%i", long1);
+    charLong[4] = "\0";
+    memcpy(buffer+3, charLong, 4);
     memcpy(buffer+7, info1, long1);
     if(TCP_Envia(SckCon, buffer, 7 + long1) == -1) 
 	{
