@@ -55,7 +55,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, 
 						int *portTCPcli, char *MisRes)
 {
-    int retornada = 0;
+    int retornada = 0; // TODO error CreaSockClient li paso un * en comptes del int
 	int socket = TCP_CreaSockClient(IPcli, portTCPcli);
     if(socket == -1) 
 	{

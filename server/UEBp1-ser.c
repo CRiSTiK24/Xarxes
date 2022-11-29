@@ -35,7 +35,7 @@ int main(int argc,char *argv[])
  /* Declaració de variables, p.e., int n;                                */
     int socket;
     char missatgeError[200];
-    char IPser[16];
+    char IPser[16] = "10.100.100.101\0";
     int portTCPser = 45456;
     char IPcli[16];
     int portTCPcli;

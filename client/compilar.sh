@@ -1,2 +1,2 @@
-gcc UEBp1v3-aUEBc.c UEBp1v3-cli.c UEBp1v3-tTCP.c -o clientDebug -g
-gcc UEBp1v3-aUEBc.c UEBp1v3-cli.c UEBp1v3-tTCP.c -o client
+gcc UEBp1-aUEBc.c UEBp1-cli.c UEBp1-tTCP.c -o clientDebug -g
+gcc UEBp1-aUEBc.c UEBp1-cli.c UEBp1-tTCP.c -o client

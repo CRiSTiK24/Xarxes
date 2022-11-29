@@ -1,0 +1,75 @@
+No.     Time        Source                Destination           Protocol Length Info
+      1 0.000000    08:00:27:80:3d:47     ff:ff:ff:ff:ff:ff     ARP      42     Who has 10.100.100.101?  Tell 10.100.100.102
+
+Frame 1: 42 bytes on wire (336 bits), 42 bytes captured (336 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: ff:ff:ff:ff:ff:ff (ff:ff:ff:ff:ff:ff)
+Address Resolution Protocol (request)
+
+No.     Time        Source                Destination           Protocol Length Info
+      2 0.000703    08:00:27:69:20:4a     08:00:27:80:3d:47     ARP      42     10.100.100.101 is at 08:00:27:69:20:4a
+
+Frame 2: 42 bytes on wire (336 bits), 42 bytes captured (336 bits)
+Ethernet II, Src: 08:00:27:69:20:4a (08:00:27:69:20:4a), Dst: 08:00:27:80:3d:47 (08:00:27:80:3d:47)
+Address Resolution Protocol (reply)
+
+No.     Time        Source                Destination           Protocol Length Info
+      3 0.000720    10.100.100.102        10.100.100.101        TCP      74     50788 > 45456 [SYN] Seq=2968961497 Win=14600 Len=0 MSS=1460 SACK_PERM=1 TSval=158548 TSecr=0 WS=128
+
+Frame 3: 74 bytes on wire (592 bits), 74 bytes captured (592 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: 08:00:27:69:20:4a (08:00:27:69:20:4a)
+Internet Protocol Version 4, Src: 10.100.100.102 (10.100.100.102), Dst: 10.100.100.101 (10.100.100.101)
+Transmission Control Protocol, Src Port: 50788 (50788), Dst Port: 45456 (45456), Seq: 2968961497, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      4 0.001201    10.100.100.101        10.100.100.102        TCP      74     45456 > 50788 [SYN, ACK] Seq=1874018181 Ack=2968961498 Win=14480 Len=0 MSS=1460 SACK_PERM=1 TSval=158783 TSecr=158548 WS=128
+
+Frame 4: 74 bytes on wire (592 bits), 74 bytes captured (592 bits)
+Ethernet II, Src: 08:00:27:69:20:4a (08:00:27:69:20:4a), Dst: 08:00:27:80:3d:47 (08:00:27:80:3d:47)
+Internet Protocol Version 4, Src: 10.100.100.101 (10.100.100.101), Dst: 10.100.100.102 (10.100.100.102)
+Transmission Control Protocol, Src Port: 45456 (45456), Dst Port: 50788 (50788), Seq: 1874018181, Ack: 2968961498, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      5 0.001273    10.100.100.102        10.100.100.101        TCP      66     50788 > 45456 [ACK] Seq=2968961498 Ack=1874018182 Win=14720 Len=0 TSval=158548 TSecr=158783
+
+Frame 5: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: 08:00:27:69:20:4a (08:00:27:69:20:4a)
+Internet Protocol Version 4, Src: 10.100.100.102 (10.100.100.102), Dst: 10.100.100.101 (10.100.100.101)
+Transmission Control Protocol, Src Port: 50788 (50788), Dst Port: 45456 (45456), Seq: 2968961498, Ack: 1874018182, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      6 0.002067    10.100.100.102        10.100.100.101        TCP      66     50788 > 45456 [FIN, ACK] Seq=2968961498 Ack=1874018182 Win=14720 Len=0 TSval=158548 TSecr=158783
+
+Frame 6: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: 08:00:27:69:20:4a (08:00:27:69:20:4a)
+Internet Protocol Version 4, Src: 10.100.100.102 (10.100.100.102), Dst: 10.100.100.101 (10.100.100.101)
+Transmission Control Protocol, Src Port: 50788 (50788), Dst Port: 45456 (45456), Seq: 2968961498, Ack: 1874018182, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      7 0.003044    10.100.100.101        10.100.100.102        TCP      66     45456 > 50788 [FIN, ACK] Seq=1874018182 Ack=2968961499 Win=14592 Len=0 TSval=158784 TSecr=158548
+
+Frame 7: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+Ethernet II, Src: 08:00:27:69:20:4a (08:00:27:69:20:4a), Dst: 08:00:27:80:3d:47 (08:00:27:80:3d:47)
+Internet Protocol Version 4, Src: 10.100.100.101 (10.100.100.101), Dst: 10.100.100.102 (10.100.100.102)
+Transmission Control Protocol, Src Port: 45456 (45456), Dst Port: 50788 (50788), Seq: 1874018182, Ack: 2968961499, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      8 0.003110    10.100.100.102        10.100.100.101        TCP      66     50788 > 45456 [ACK] Seq=2968961499 Ack=1874018183 Win=14720 Len=0 TSval=158548 TSecr=158784
+
+Frame 8: 66 bytes on wire (528 bits), 66 bytes captured (528 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: 08:00:27:69:20:4a (08:00:27:69:20:4a)
+Internet Protocol Version 4, Src: 10.100.100.102 (10.100.100.102), Dst: 10.100.100.101 (10.100.100.101)
+Transmission Control Protocol, Src Port: 50788 (50788), Dst Port: 45456 (45456), Seq: 2968961499, Ack: 1874018183, Len: 0
+
+No.     Time        Source                Destination           Protocol Length Info
+      9 5.009599    08:00:27:69:20:4a     08:00:27:80:3d:47     ARP      42     Who has 10.100.100.102?  Tell 10.100.100.101
+
+Frame 9: 42 bytes on wire (336 bits), 42 bytes captured (336 bits)
+Ethernet II, Src: 08:00:27:69:20:4a (08:00:27:69:20:4a), Dst: 08:00:27:80:3d:47 (08:00:27:80:3d:47)
+Address Resolution Protocol (request)
+
+No.     Time        Source                Destination           Protocol Length Info
+     10 5.009653    08:00:27:80:3d:47     08:00:27:69:20:4a     ARP      42     10.100.100.102 is at 08:00:27:80:3d:47
+
+Frame 10: 42 bytes on wire (336 bits), 42 bytes captured (336 bits)
+Ethernet II, Src: 08:00:27:80:3d:47 (08:00:27:80:3d:47), Dst: 08:00:27:69:20:4a (08:00:27:69:20:4a)
+Address Resolution Protocol (reply)
