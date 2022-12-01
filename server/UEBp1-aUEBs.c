@@ -144,9 +144,9 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 {
     int retornada = 0;
     int tamanyFitxer;
-    printf("AVANS REP I DESCONTRYEUEIX\n ");
+
     int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, &tamanyFitxer);
-    printf("despres REP I DESCONTRYEUEIX\n ");
+
     if(err == -1) 
 	{
         char tmp[200] = "ERROR: Interficie socket ha retornat -1\n\0";
@@ -176,15 +176,15 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     }
     else 
 	{
-        printf("avans llargadapath\n ");
+
         int llargadaPath = strlen(getcwd(NULL, 0));
-        printf("despres llargadapath\n ");
+
         char path[10000];
-        printf("avans memcopy\n ");
+
         memcpy(path, getcwd(NULL, 0), llargadaPath);
-        printf("avans memcopy1\n ");
+
         memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
-        printf("avans memcopy2\n ");
+        printf("path:%i llargadaPath:%i tamanyFitxer:%i\n ");
         memcpy(path + llargadaPath + tamanyFitxer, '\0', 1); // ho convertim en string
         printf("avans memcopy3\n ");
         struct stat informacioFitxer;
@@ -346,10 +346,9 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	char buffer[10006];
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
-    printf("Socket: %d\n", SckCon);
+
     int read = TCP_Rep(SckCon, buffer, 10006);
-    printf("read: %d\n",read);
-    printf("buffer: %s\n",buffer);
+
     if(read == -1) 
 	{
         retornada = -1;
@@ -362,7 +361,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
-        printf("tipus: %s\n",tipus);
+
         if(strcmp(tipus,"OBT")!=0)
 		{
             retornada = -2;
@@ -373,14 +372,14 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 			/* char 3 al 7 del buffer								      */
             char tamanyFitxer[4];
             memcpy(tamanyFitxer, buffer+3, 4);
-            printf("tamanyFitxer: %s\n",tamanyFitxer);
+
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
-            printf("long1: %d\n",*long1);
+
             memcpy(info1, buffer+7, *long1);
-            printf("info1: %s\n",info1);
+
 
         }
     }
