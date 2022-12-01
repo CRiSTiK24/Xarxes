@@ -256,6 +256,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 
     int read = TCP_Rep(SckCon, buffer, 10006);
 
+    printf("read: %d\n", read);
+
     if(read == -1) 
 	{
         retornada = -1;
