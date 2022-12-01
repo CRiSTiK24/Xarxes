@@ -55,8 +55,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, 
 						int *portTCPcli, char *MisRes)
 {
-    int retornada = 0; 
 	int socket = TCP_CreaSockClient(IPcli, *portTCPcli);
+    int retornada = socket;
     if(socket == -1) 
 	{
         retornada = -1;
