@@ -311,10 +311,6 @@ int UEBs_TancaConnexio(int SckCon, char *MisRes)
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
 int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
-    printf("tipus:%s\n",tipus);
-    printf("socket:%i\n",SckCon);
-    printf("info1:%s\n",info1);
-    printf("long1:%i\n",long1);
     int retornada = 0;
 	char buffer[17+long1];
     memcpy(buffer, tipus, 3);
