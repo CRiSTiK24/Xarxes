@@ -144,7 +144,9 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 {
     int retornada = 0;
     int* tamanyFitxer;
+    printf("AVANS REP I DESCONTRYEUEIX\n ");
     int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, tamanyFitxer);
+    printf("despres REP I DESCONTRYEUEIX\n ");
     if(err == -1) 
 	{
         char tmp[200] = "ERROR: Interficie socket ha retornat -1\0";
@@ -357,7 +359,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 			/* guarda a NomFitx 										  */
             memcpy(info1, buffer+7, *long1);
             printf("info1: %s",info1);
-            
+
         }
     }
     return retornada;
