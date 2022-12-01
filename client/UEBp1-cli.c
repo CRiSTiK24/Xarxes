@@ -34,7 +34,7 @@ int main(int argc,char *argv[])
     char missatgeError[200];
     char IPser[16] = "10.100.100.101\0"; // TODO: fer que es llegeixi de teclat
     int portTCPser = 45456;
-    char IPcli[16] = "10.100.100.101\0";
+    char IPcli[16] = "10.100.100.102\0";
     int portTCPcli = 0; // despres farem que es llegeixi de fitxer
     //char tiposPeticio[4] = "OBT\0";
     char nomFitx[10000] = "/llocUEB/primera.html\0"; //TODO: fer que es llegeixi de teclat
