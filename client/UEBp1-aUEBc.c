@@ -55,8 +55,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli, 
 						int *portTCPcli, char *MisRes)
 {
-    int retornada = 0; // TODO error CreaSockClient li paso un * en comptes del int
-	int socket = TCP_CreaSockClient(IPcli, *portTCPcli);
+    int retornada = 0; // Dona un warining a sota ja que li passem la adreça. Pero si li passem el numero amb * no funciona.
+	int socket = TCP_CreaSockClient(IPcli, portTCPcli);
     if(socket == -1) 
 	{
         retornada = -1;
