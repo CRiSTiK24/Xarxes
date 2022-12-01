@@ -142,7 +142,9 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
             char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
-                printf("%s\n",TCP_ObteMissError(void));
+                char[2000] error = strerror(errno);
+                error[1999] = "\0";
+                printf("%s\n",error);
                 retornada = -1;
                 char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\n\0";
                 strcpy(MisRes,tmp);
