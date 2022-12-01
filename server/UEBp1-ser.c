@@ -100,7 +100,7 @@ int main(int argc,char *argv[])
                     }
                 }
             }
-            while(retorn>0)
+            while(retorn>0);
             
         }
         UEBs_TancaConnexio(socket, missatgeError);
