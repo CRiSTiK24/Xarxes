@@ -271,8 +271,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
         printf("tipus: %s\n", tipus);
-        if(strcmp(tipus,"COR")!=0 || strcmp(tipus,"ERR")!=0)
-		{
+        if(strcmp(tipus,"COR")!=0 || strcmp(tipus,"ERR")!=0){
             retornada = -2;
         }
         else 
@@ -294,6 +293,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 
         }
     }
+    printf("retornada: %d\n", retornada);
     return retornada;
 
 }
