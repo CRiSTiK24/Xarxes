@@ -176,11 +176,17 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     }
     else 
 	{
+        printf("avans llargadapath\n ");
         int llargadaPath = strlen(getcwd(NULL, 0));
+        printf("despres llargadapath\n ");
         char path[10000];
+        printf("avans memcopy\n ");
         memcpy(path, getcwd(NULL, 0), llargadaPath);
+        printf("avans memcopy1\n ");
         memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
+        printf("avans memcopy2\n ");
         memcpy(path + llargadaPath + tamanyFitxer, '\0', 1); // ho convertim en string
+        printf("avans memcopy3\n ");
         struct stat informacioFitxer;
         if (stat(path, &informacioFitxer) == -1) 
 		{
