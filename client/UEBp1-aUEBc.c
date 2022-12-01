@@ -142,7 +142,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
             char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
-                char[2000] error = strerror(errno);
+                char error[2000] = strerror(errno);
                 error[1999] = "\0";
                 printf("%s\n",error);
                 retornada = -1;
