@@ -270,8 +270,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
-
-        if(strcmp(tipus,"COR\0")!=0 || strcmp(tipus,"ERR\0")!=0)
+        printf("tipus: %s\n", tipus);
+        if(strcmp(tipus,"COR")!=0 || strcmp(tipus,"ERR")!=0)
 		{
             retornada = -2;
         }
