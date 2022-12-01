@@ -148,7 +148,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
                 MisRes[199] = '\0';
             }
             else{
-                print("Fitxer: %s\n", Fitx);
+                printf("Fitxer: %s\n", Fitx);
             }
         }
     }
