@@ -223,7 +223,7 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
     memcpy(buffer, tipus, 3);
     char charLong[5];
     sprintf(charLong, "%i", long1);
-    charLong[4] = "\0"; //TODO: 222:17 makes integer from pointer without a cast
+    //charLong[4] = "\0"; //TODO: 222:17 makes integer from pointer without a cast
     memcpy(buffer+3, charLong, 4);
     memcpy(buffer+7, info1, long1);
     if(TCP_Envia(SckCon, buffer, 7 + long1) == -1) 
