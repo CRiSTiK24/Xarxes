@@ -330,10 +330,11 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
     int retornada = 0;
-	char buffer[1006];
+	char buffer[10006];
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
-    int read = TCP_Rep(SckCon, buffer, 1006); 
+    int read = TCP_Rep(SckCon, buffer, 10006);
+    printf("read: %d\n",read);
     printf("buffer: %s\n",buffer);
     if(read == -1) 
 	{
