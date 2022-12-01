@@ -96,7 +96,7 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
 						 int *portTCPcli, char *MisRes)
 {
     int retornada;
-    if(TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli) == -1)
+    if((retornada = TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli)) == -1)
     {
         char tmp[200] = "ERROR: No s'ha pogut acceptar la conexio "
                         "entre el Socket local amb IP remota\0";
