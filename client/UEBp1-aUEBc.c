@@ -60,7 +60,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
     if(socket == -1) 
 	{
         retornada = -1;
-        char tmp[200] = "Hi ha hagut un error al crear el socket Client \0";
+        char tmp[200] = "Hi ha hagut un error al crear el socket Client \n\0";
 
         strcpy(MisRes, tmp);
     }
@@ -71,7 +71,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 		{
             retornada = -1;
             char tmp[200] =
-				"Hi ha hagut un error al crear la connexió amb el servidor \0";
+				"Hi ha hagut un error al crear la connexió amb el servidor \n\0";
             strcpy(MisRes,tmp);
             MisRes[199] = '\0';
         }
@@ -79,7 +79,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 		{
             if(TCP_TrobaAdrSockLoc(socket, IPcli, portTCPcli) == -1) 
 			{
-                char tmp[200] = "ERROR: No s'ha treure les ip i ports del socket\0";
+                char tmp[200] = "ERROR: No s'ha treure les ip i ports del socket\n\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
                 retornada = -1;
@@ -88,7 +88,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
             else 
 			{
                 char tmp[200] = "EXIT: S'ha pogut demanar la conexio entre el "
-							 "Socket local amb Ip remota\0";
+							 "Socket local amb Ip remota\n\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
@@ -124,29 +124,27 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
     if(llargadaPath > 10000 || llargadaPath <= 0) 
 	{
         retornada = -2;
-        char tmp[200] = "ERROR: El fitxer és més gran de 10000 o més petit de 0\0";
+        char tmp[200] = "ERROR: El fitxer és més gran de 10000 o més petit de 0\n\0";
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
     }
     else 
 	{
-        printf("3\n");
-        if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1) 
+        if(ConstiEnvMis(SckCon, "OBT\0", NomFitx, llargadaPath) == -1) /// error aqui
 		{
-            printf("4\n");
             retornada = -1;
-            char tmp[200] = "ERROR: No s'ha pogut construir i enviar el missatge\0";
+            char tmp[200] = "ERROR: No s'ha pogut construir i enviar el missatge\n\0";
             strcpy(MisRes,tmp);
             MisRes[199] = '\0';
         }
         else 
 		{
-            printf("5\n");
             char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
+                printf("%s\n",TCP_ObteMissError(void));
                 retornada = -1;
-                char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\0";
+                char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\n\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
@@ -170,13 +168,13 @@ int UEBc_TancaConnexio(int SckCon, char *MisRes)
     if(TCP_TancaSock(SckCon) == -1) 
 	{
         retornada = -1;
-        char tmp[200] = "ERROR: No s'ha pogut tancar el fitxer\0";
+        char tmp[200] = "ERROR: No s'ha pogut tancar el fitxer\n\0";
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
     }
     else 
 	{
-        char tmp[200] = "EXIT: S'ha pogut tancar el fitxer\0";
+        char tmp[200] = "EXIT: S'ha pogut tancar el fitxer\n\0";
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
     }
