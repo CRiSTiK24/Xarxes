@@ -331,7 +331,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	char buffer[1006];
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
-    int read = TCP_Rep(SckCon, buffer, 1006);  
+    int read = TCP_Rep(SckCon, buffer, 1006); 
+    printf("buffer: %s",buffer);
     if(read == -1) 
 	{
         retornada = -1;
@@ -339,9 +340,8 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     else 
 	{
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
-        memcpy(tipus, buffer, 4);
-        tipus[3] = '\0';
-        if(strcmp(tipus,"OBT\0")!=0)
+        memcpy(tipus, buffer, 3);
+        if(strcmp(tipus,"OBT")!=0)
 		{
             retornada = -2;
         }
@@ -349,21 +349,15 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		{
 			/* Guarda en una nova string tamanyFitxer una substring del   */
 			/* char 3 al 7 del buffer								      */
-            char tamanyFitxer[10000];
-            memcpy(tamanyFitxer, buffer+3, 5);
+            char tamanyFitxer[4];
+            memcpy(tamanyFitxer, buffer+3, 4);
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
-			int i;
-            for(i = 0; i < 4; i++)
-			{
-                if(tamanyFitxer[i] <= '0' || tamanyFitxer[i] > '9') 
-				{
-                    retornada = -2;
-				}
-			}
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
-            memcpy(info1, buffer+8, *long1);
+            memcpy(info1, buffer+7, *long1);
+            printf("info1: %s",info1);
+            
         }
     }
     return retornada;
