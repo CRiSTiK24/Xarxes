@@ -142,8 +142,8 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
             char tipus[4];
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
-                char error[2000] = strerror(errno);
-                error[1999] = "\0";
+                char error[2000];
+                memcpy(error,strerror(errno),2000);
                 printf("%s\n",error);
                 retornada = -1;
                 char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\n\0";
