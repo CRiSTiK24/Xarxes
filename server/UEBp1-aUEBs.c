@@ -372,6 +372,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
             *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
+            printf("long1: %d\n",*long1);
             memcpy(info1, buffer+7, *long1);
             printf("info1: %s\n",info1);
 
