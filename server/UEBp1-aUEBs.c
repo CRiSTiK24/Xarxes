@@ -162,6 +162,13 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
         MisRes[199] = '\0';
         retornada = -2;
     }
+    else if(err == -3) 
+	{
+        char tmp[200] = "Client ha tancat socket\n\0";
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+        retornada = -2;
+    }
     else if(NomFitx[0] != '/') 
 	{
         char tmp[200] = "ERROR: El nom del fitxer ha de començar per \0";
@@ -340,6 +347,9 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     if(read == -1) 
 	{
         retornada = -1;
+    }
+    else if(read == 0){
+        retornada = -3;
     }
     else 
 	{

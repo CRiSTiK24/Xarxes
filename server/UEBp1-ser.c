@@ -34,6 +34,7 @@ int main(int argc,char *argv[])
 {
  /* Declaració de variables, p.e., int n;                                */
     int socket;
+    int socketConnexio;
     char missatgeError[200];
     char IPser[16] = "10.100.100.101\0";
     int portTCPser = 45456;
@@ -52,25 +53,59 @@ int main(int argc,char *argv[])
 	{
 
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
-        if(UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1)
+        if((socketConnexio = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError)) == -1)
 		{
             printf("Error al acceptar connexió\n\0");
             printf("%s\n",missatgeError);
         }
         else 
 		{
-            if(UEBs_ServeixPeticio(socket, tipusPeticio, nomFitx, missatgeError) < 0)
-			{
-                printf("Error al servir petició\n\0");
-                printf("%s\n",missatgeError);
+            int retorn;
+            do{
+                retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);
+                if(retorn == -3)
+                {
+                    printf("Error al servir petició -3\n\0");
+                    printf("%s\n",missatgeError);
+                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    {
+                        printf("%s\n",missatgeError);
+                    }
+                }
+                else if(retorn == -2)
+                {
+                    printf("Error al servir petició -2\n\0");
+                    printf("%s\n",missatgeError);
+                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    {
+                        printf("%s\n",missatgeError);
+                    }
+                }
+                else if(retorn == -4)
+                {
+                    printf("Error al servir petició -4\n\0");
+                    printf("%s\n",missatgeError);
+                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    {
+                        printf("%s\n",missatgeError);
+                    }
+                }
+                else if(retorn == -1)
+                {
+                    printf("Error al servir petició -1\n\0");
+                    printf("%s\n",missatgeError);
+                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    {
+                        printf("%s\n",missatgeError);
+                    }
+                }
             }
+            while(retorn>0)
             
         }
-        if(UEBs_TancaConnexio(socket, missatgeError) == -1)
-		{
-            printf("%s\n",missatgeError);
-        }
+        UEBs_TancaConnexio(socket, missatgeError);
     }
+    
     return 0;
 }
 
