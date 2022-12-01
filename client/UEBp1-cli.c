@@ -43,7 +43,7 @@ int main(int argc,char *argv[])
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
-    printf("socket: %d\n", socket);
+
     if(socket == -1)
 	{
         printf("%s\n",missatgeError);
@@ -54,7 +54,7 @@ int main(int argc,char *argv[])
 		{
             printf("%s\n",missatgeError);
         }
-        printf("Fitxer: %s\n",fitxer);
+        printf("%s\n",fitxer);
         if(UEBc_TancaConnexio(socket,missatgeError) == -1)
 		{
             printf("%s\n",missatgeError);
