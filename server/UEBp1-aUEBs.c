@@ -368,7 +368,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
             char tamanyFitxer[5];
             memcpy(tamanyFitxer, buffer+3, 4);
             printf("tamanyFitxer: %s\n",tamanyFitxer);
-            tamany[4] = '\0';
+            tamanyFitxer[4] = '\0';
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
