@@ -355,6 +355,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	{
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
+        printf("tipus: %s\n",tipus);
         if(strcmp(tipus,"OBT")!=0)
 		{
             retornada = -2;
@@ -365,6 +366,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 			/* char 3 al 7 del buffer								      */
             char tamanyFitxer[4];
             memcpy(tamanyFitxer, buffer+3, 4);
+            printf("tamanyFitxer: %s\n",tamanyFitxer);
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
