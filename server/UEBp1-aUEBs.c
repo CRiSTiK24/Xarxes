@@ -184,10 +184,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
         memcpy(path, getcwd(NULL, 0), llargadaPath);
 
         memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
-        printf("path:%i llargadaPath:%i tamanyFitxer:%i\n ");
         path[llargadaPath+tamanyFitxer] = '\0';
-        //memcpy(path + llargadaPath + tamanyFitxer, '\0', 1); // ho convertim en string
-        printf("path: %s\n", path);
         struct stat informacioFitxer;
         if (stat(path, &informacioFitxer) == -1) 
 		{
@@ -229,6 +226,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
             else 
 			{
                 int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacioFitxer.st_size);
+                printf("path dins de ENVMIS: %s\n", path);
                 if(enviament == -1) 
 				{
                     char tmp[200] = "ERROR: a la interficie de sockets\0";
@@ -246,6 +244,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 
         }
     }
+    printf("Retornada: %d\n", retornada);
     return retornada;
 
 }
