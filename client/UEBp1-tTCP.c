@@ -71,7 +71,6 @@ int TCP_CreaSockClient(const char *IPloc, int portTCPloc)
 	if((bind(scon,(struct sockaddr*)&adrloc, sizeof(adrloc))) == -1)
 	{
         char* error = strerror(errno);
-		printf("%s\n", error);
         return (-1);
 	}
 	return scon;
@@ -222,6 +221,7 @@ int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 	{
 		return(-1);
 	}
+	printf("%s\n", SeqBytes);
 	return bytes_llegits;
 }
 
