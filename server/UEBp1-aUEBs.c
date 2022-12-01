@@ -311,17 +311,22 @@ int UEBs_TancaConnexio(int SckCon, char *MisRes)
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
 int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
+    printf("tipus:%s\n",tipus);
+    printf("socket:%i\n",SckCon);
+    printf("info1:%s\n",info1);
+    printf("long1:%i\n",long1);
     int retornada = 0;
-	char buffer[7+long1];
+	char buffer[17+long1];
     memcpy(buffer, tipus, 3);
-    char longitud[5];
-    sprintf(longitud, "%.4d", long1);
-    memcpy(buffer+3, longitud, 4);
+    char charLong[4];
+    sprintf(charLong,"%.4d",long1);
+    //charLong[4] = "\0"; //TODO: 222:17 makes integer from pointer without a cast
+    memcpy(buffer+3, charLong, 4);
     memcpy(buffer+7, info1, long1);
-    if(TCP_Envia(SckCon, buffer, 7+long1) == -1) 
+    if(TCP_Envia(SckCon, buffer, 7 + long1) == -1) 
 	{
         retornada = -1;
-	}
+    }
     return retornada;
 }
 

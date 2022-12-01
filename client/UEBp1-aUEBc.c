@@ -250,20 +250,26 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 /* -3 si l'altra part tanca la connexió.                                  */
 int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
-	int retornada = 0;
-	char buffer[1006];
-	/* Llegeix el missatge del socket 									  */
-	
-    int read = TCP_Rep(SckCon, buffer, 1006);  
-    if(read <= 8)//mirem si TCP_Rep ha llegit menys de 8 bytes i per tant hi ha perrill de segfaults
+    int retornada = 0;
+	char buffer[10006];
+    // Llegeix el missatge del socket
+	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
+
+    int read = TCP_Rep(SckCon, buffer, 10006);
+
+    if(read == -1) 
 	{
         retornada = -1;
     }
+    else if(read == 0){
+        retornada = -3;
+    }
     else 
 	{
-		/* Guarda a tipus una substring del buffer del char 0 al 4 	      */
+		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
+
         if(strcmp(tipus,"COR\0")!=0 || strcmp(tipus,"ERR\0")!=0)
 		{
             retornada = -2;
@@ -272,22 +278,19 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		{
 			/* Guarda en una nova string tamanyFitxer una substring del   */
 			/* char 3 al 7 del buffer								      */
-            char tamanyFitxer[5];
-            memcpy(tamanyFitxer, buffer+3, 5);
+            char tamanyFitxer[4];
+            memcpy(tamanyFitxer, buffer+3, 4);
+
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
-			int i;
-            for(i = 0; i < 4; i++) 
-			{
-                if(tamanyFitxer[i] <= '0' || tamanyFitxer[i] > '9') 
-				{
-                    retornada = -2;
-                }
-            }
-			/* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
+            /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
-            memcpy(info1, buffer+8, *long1);
+
+            memcpy(info1, buffer+7, *long1);
+
+
         }
     }
     return retornada;
+
 }
