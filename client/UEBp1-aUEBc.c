@@ -148,7 +148,6 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
                 MisRes[199] = '\0';
             }
             else{
-                printf("Fitxer: %s\n", Fitx);
             }
         }
     }
@@ -255,8 +254,6 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
 
     int read = TCP_Rep(SckCon, buffer, 10006);
-
-    printf("read: %d\n", read);
 
     if(read == -1) 
 	{

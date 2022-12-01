@@ -226,7 +226,6 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
             else 
 			{
                 int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacioFitxer.st_size);
-                printf("path dins de ENVMIS: %s\n", path);
                 if(enviament == -1) 
 				{
                     char tmp[200] = "ERROR: a la interficie de sockets\0";
@@ -244,7 +243,6 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 
         }
     }
-    printf("Retornada: %d\n", retornada);
     return retornada;
 
 }
