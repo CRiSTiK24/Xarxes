@@ -42,7 +42,9 @@ int main(int argc,char *argv[])
     int longFitx = 0;
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError) == -1)
+    socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
+    printf("socket: %d\n", socket);
+    if(socket == -1)
 	{
         printf("%s\n",missatgeError);
     }
