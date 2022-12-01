@@ -333,6 +333,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 	char buffer[10006];
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
+    printf("Socket: %d\n", SckCon);
     int read = TCP_Rep(SckCon, buffer, 10006);
     printf("read: %d\n",read);
     printf("buffer: %s\n",buffer);
