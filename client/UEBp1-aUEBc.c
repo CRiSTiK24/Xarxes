@@ -221,8 +221,8 @@ int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
     int retornada = 0;
 	char buffer[17+long1];
     memcpy(buffer, tipus, 3);
-    char charLong[5];
-    sprintf(charLong, "%i", long1);
+    char charLong[4];
+    sprintf(charLong,"%.4d",long1);
     //charLong[4] = "\0"; //TODO: 222:17 makes integer from pointer without a cast
     memcpy(buffer+3, charLong, 4);
     memcpy(buffer+7, info1, long1);
