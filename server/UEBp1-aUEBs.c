@@ -143,9 +143,9 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
 int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *MisRes)
 {
     int retornada = 0;
-    int* tamanyFitxer;
+    int tamanyFitxer;
     printf("AVANS REP I DESCONTRYEUEIX\n ");
-    int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, tamanyFitxer);
+    int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, &tamanyFitxer);
     printf("despres REP I DESCONTRYEUEIX\n ");
     if(err == -1) 
 	{
@@ -365,10 +365,9 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		{
 			/* Guarda en una nova string tamanyFitxer una substring del   */
 			/* char 3 al 7 del buffer								      */
-            char tamanyFitxer[5];
+            char tamanyFitxer[4];
             memcpy(tamanyFitxer, buffer+3, 4);
             printf("tamanyFitxer: %s\n",tamanyFitxer);
-            tamanyFitxer[4] = '\0';
 			/* Converteix tamanyFitxer a un enter 						  */
             *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
