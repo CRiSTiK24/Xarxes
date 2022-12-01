@@ -54,7 +54,7 @@ int main(int argc,char *argv[])
 		{
             printf("%s\n",missatgeError);
         }
-        prinf("Fitxer: %s\n",fitxer);
+        printf("Fitxer: %s\n",fitxer);
         if(UEBc_TancaConnexio(socket,missatgeError) == -1)
 		{
             printf("%s\n",missatgeError);
