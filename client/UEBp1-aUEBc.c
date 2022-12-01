@@ -286,6 +286,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 			/* guarda a NomFitx 										  */
 
             memcpy(info1, buffer+7, *long1);
+            printf("info1: %s\n", info1);
 
 
         }
