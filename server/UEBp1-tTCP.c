@@ -217,6 +217,7 @@ int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 	int bytes_llegits = -1;
 	if((bytes_llegits = read(Sck, SeqBytes, LongSeqBytes)) == -1)
 	{
+		printf("%s\n",SeqBytes);
 		return(-1);
 	}
 	return bytes_llegits;

@@ -221,7 +221,6 @@ int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 	{
 		return(-1);
 	}
-	printf("%s\n", SeqBytes);
 	return bytes_llegits;
 }
 
