@@ -179,8 +179,8 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
         int llargadaPath = strlen(getcwd(NULL, 0));
         char path[10000];
         memcpy(path, getcwd(NULL, 0), llargadaPath);
-        memcpy(path + llargadaPath, NomFitx, *tamanyFitxer);
-        memcpy(path + llargadaPath + *tamanyFitxer, '\0', 1); // ho convertim en string
+        memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
+        memcpy(path + llargadaPath + tamanyFitxer, '\0', 1); // ho convertim en string
         struct stat informacioFitxer;
         if (stat(path, &informacioFitxer) == -1) 
 		{
