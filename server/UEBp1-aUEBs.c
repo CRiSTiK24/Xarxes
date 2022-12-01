@@ -149,7 +149,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     printf("despres REP I DESCONTRYEUEIX\n ");
     if(err == -1) 
 	{
-        char tmp[200] = "ERROR: Interficie socket ha retornat -1\0";
+        char tmp[200] = "ERROR: Interficie socket ha retornat -1\n\0";
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
         retornada = -1;
@@ -334,7 +334,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
     int read = TCP_Rep(SckCon, buffer, 1006); 
-    printf("buffer: %s",buffer);
+    printf("buffer: %s\n",buffer);
     if(read == -1) 
 	{
         retornada = -1;
@@ -358,7 +358,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
             memcpy(info1, buffer+7, *long1);
-            printf("info1: %s",info1);
+            printf("info1: %s\n",info1);
 
         }
     }

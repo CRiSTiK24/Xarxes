@@ -220,6 +220,7 @@ int TCP_Rep(int Sck, char *SeqBytes, int LongSeqBytes)
 	{
 		return(-1);
 	}
+	printf("Bytes llegits: %d",bytes_llegits);
 	return bytes_llegits;
 }
 
