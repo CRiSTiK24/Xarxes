@@ -277,6 +277,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
         }
         else 
 		{
+            printf("EIIIIIIIIIIIIIIIIIIIIII: %s\n", tipus);
 			/* Guarda en una nova string tamanyFitxer una substring del   */
 			/* char 3 al 7 del buffer								      */
             char tamanyFitxer[4];
