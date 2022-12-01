@@ -56,7 +56,7 @@ int UEBc_DemanaConnexio(const char *IPser, int portTCPser, char *IPcli,
 						int *portTCPcli, char *MisRes)
 {
     int retornada = 0; // TODO error CreaSockClient li paso un * en comptes del int
-	int socket = TCP_CreaSockClient(IPcli, portTCPcli);
+	int socket = TCP_CreaSockClient(IPcli, *portTCPcli);
     if(socket == -1) 
 	{
         retornada = -1;
@@ -143,7 +143,7 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
             if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
 			{
                 char error[2000];
-                memcpy(error,TCP_ObteMissError(void),2000);
+                memcpy(error,TCP_ObteMissError(),2000);
                 printf("%s\n",error);
                 retornada = -1;
                 char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\n\0";

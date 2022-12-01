@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug/
+cmake_ninja_workdir = /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target server
 
@@ -49,24 +49,24 @@ cmake_ninja_workdir = /cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug
 
 build cmake_object_order_depends_target_server: phony || CMakeFiles/server.dir
 
-build CMakeFiles/server.dir/UEBp1v3-aUEBs.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/server/UEBp1v3-aUEBs.c || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/UEBp1v3-aUEBs.c.o.d
+build CMakeFiles/server.dir/UEBp1-aUEBs.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/UEBp1-aUEBs.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/UEBp1-aUEBs.c.o.d
   FLAGS = -g -std=gnu99
   OBJECT_DIR = CMakeFiles/server.dir
   OBJECT_FILE_DIR = CMakeFiles/server.dir
   TARGET_COMPILE_PDB = CMakeFiles/server.dir/
   TARGET_PDB = server.pdb
 
-build CMakeFiles/server.dir/UEBp1v3-ser.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/server/UEBp1v3-ser.c || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/UEBp1v3-ser.c.o.d
+build CMakeFiles/server.dir/UEBp1-ser.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/UEBp1-ser.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/UEBp1-ser.c.o.d
   FLAGS = -g -std=gnu99
   OBJECT_DIR = CMakeFiles/server.dir
   OBJECT_FILE_DIR = CMakeFiles/server.dir
   TARGET_COMPILE_PDB = CMakeFiles/server.dir/
   TARGET_PDB = server.pdb
 
-build CMakeFiles/server.dir/UEBp1v3-tTCP.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/server/UEBp1v3-tTCP.c || cmake_object_order_depends_target_server
-  DEP_FILE = CMakeFiles/server.dir/UEBp1v3-tTCP.c.o.d
+build CMakeFiles/server.dir/UEBp1-tTCP.c.o: C_COMPILER__server_Debug /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/UEBp1-tTCP.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/UEBp1-tTCP.c.o.d
   FLAGS = -g -std=gnu99
   OBJECT_DIR = CMakeFiles/server.dir
   OBJECT_FILE_DIR = CMakeFiles/server.dir
@@ -81,7 +81,7 @@ build CMakeFiles/server.dir/UEBp1v3-tTCP.c.o: C_COMPILER__server_Debug /cygdrive
 #############################################
 # Link the executable server.exe
 
-build server.exe: C_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/UEBp1v3-aUEBs.c.o CMakeFiles/server.dir/UEBp1v3-ser.c.o CMakeFiles/server.dir/UEBp1v3-tTCP.c.o
+build server.exe: C_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/UEBp1-aUEBs.c.o CMakeFiles/server.dir/UEBp1-ser.c.o CMakeFiles/server.dir/UEBp1-tTCP.c.o
   FLAGS = -g
   LINK_FLAGS = -Wl,--enable-auto-import
   OBJECT_DIR = CMakeFiles/server.dir
@@ -97,7 +97,7 @@ build server.exe: C_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/UEBp1v
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug && /cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/bin/cmake.exe -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug && /cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/bin/cmake.exe -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -108,7 +108,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug && /cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/bin/cmake.exe --regenerate-during-build -S/cygdrive/c/Users/CRiSTiK/Desktop/server -B/cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug
+  COMMAND = cd /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug && /cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/bin/cmake.exe --regenerate-during-build -S/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server -B/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -126,7 +126,7 @@ build server: phony server.exe
 # =============================================================================
 
 #############################################
-# Folder: /cygdrive/c/Users/CRiSTiK/Desktop/server/cmake-build-debug
+# Folder: /cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug
 
 build all: phony server.exe
 
