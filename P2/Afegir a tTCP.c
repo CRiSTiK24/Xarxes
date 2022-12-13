@@ -18,7 +18,7 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	struct timeval
 	{
 		long tv_sec; /* segons 											  */
-l		long tv_usec; /* microsegons 									  */
+		long tv_usec; /* microsegons 									  */
 	};
 	struct timeval temps;
 	temps.tv_sec = Temps / 100;
