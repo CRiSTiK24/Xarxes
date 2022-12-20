@@ -341,7 +341,7 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	}
 	else 
 	{
-		if(select(descmax+1, &conjunt, NULL, NULL, temps) == -1) 
+		if(select(descmax+1, &conjunt, NULL, NULL, &temps) == -1) 
 		{
 			return -2;
 		}
@@ -350,7 +350,7 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	bool trobat = false;
 	while(i <= LongLlistaSck && !trobat) 
 	{
-		if(FD_ISSET(LlistaSck[i], &conjunt)) trobat = true;
+		if(FD_ISSET(LlistaSck[i], &conjunt)) trobat = 1;
 		else i++;
 	}
 	if(trobat) return LlistaSck[i];

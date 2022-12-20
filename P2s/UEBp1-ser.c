@@ -47,7 +47,9 @@ int main(int argc,char *argv[])
     int portTCPcli;
     char tipusPeticio[4];
     char nomFitx[10000];
-    int LongLlistaSck[2];
+    const int LongLlistaSck = 10;
+    int LlistaSck[LongLlistaSck];
+    
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBs_IniciaServ(&socket, portTCPser, missatgeError) == -1)
@@ -56,57 +58,74 @@ int main(int argc,char *argv[])
     }
     else 
 	{
-
+        AfegeixSck(socket, LlistaSck,LongLlistaSck);
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
-        if((socketConnexio = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError)) == -1)
-		{
-            printf("Error al acceptar connexió\n\0");
-            printf("%s\n",missatgeError);
-        }
-        else 
-		{
-            int retorn;
-            do{
-                retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);
-                if(retorn == -3)
-                {
-                    printf("Error al servir petició -3\n\0");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
-                    {
-                        printf("%s\n",missatgeError);
+
+        while(1){
+            int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
+            if(haArribatAlgo == -1){
+                printf("Error: ha arribat algo\n\0");
+                printf("%s\n",missatgeError);
+            }
+            else if(haArribatAlgo==-2){
+                printf("No ha arribat res \n\0");
+            }
+            else{
+                int trobat = 0;
+                int i = 0;
+                while(!trobat and i<LongLlistaSck){
+                    if(LlistaSck[i]==haArribatAlgo){
+                        trobat = 1;
                     }
                 }
-                else if(retorn == -2)
-                {
-                    printf("Error al servir petició -2\n\0");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                if(trobat){
+                    retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
+                    if(retorn == -3)
                     {
+                        printf("Error al servir petició -3\n\0");
                         printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            printf("%s\n",missatgeError);
+                        }
+                    }
+                    else if(retorn == -2)
+                    {
+                        printf("Error al servir petició -2\n\0");
+                        printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            printf("%s\n",missatgeError);
+                        }
+                    }
+                    else if(retorn == -4)
+                    {
+                        printf("Error al servir petició -4\n\0");
+                        printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            printf("%s\n",missatgeError);
+                        }
+                    }
+                    else if(retorn == -1)
+                    {
+                        printf("Error al servir petició -1\n\0");
+                        printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            printf("%s\n",missatgeError);
+                        }
                     }
                 }
-                else if(retorn == -4)
-                {
-                    printf("Error al servir petició -4\n\0");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
-                    {
+                else{
+                    int socketAccepta
+                    if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
+                        printf("Error al acceptar connexió\n\0");
                         printf("%s\n",missatgeError);
                     }
-                }
-                else if(retorn == -1)
-                {
-                    printf("Error al servir petició -1\n\0");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
-                    {
-                        printf("%s\n",missatgeError);
-                    }
+                    AfegeixSck(socketAccepta, LlistaSck,LongLlistaSck);
                 }
             }
-            while(retorn>0);
-            
         }
         UEBs_TancaConnexio(socket, missatgeError);
     }
@@ -140,13 +159,13 @@ int AfegeixSck(int Sck, int *LlistaSck, int LongLlistaSck)
 	int retornada = 0;
 	for (i = 0; i < LongLlistaSck; i++)
 	{
-		if (LlistSck[i] == -1) 
+		if (LlistaSck[i] == -1) 
 		{ 
 			pos = i; 
 			break; 
 		} 
 	}
-	if (pos != -1) LlistSck[pos] = Sck; 
+	if (pos != -1) LlistaSck[pos] = Sck; 
 	else retornada = -1;
 	return retornada;
 }
