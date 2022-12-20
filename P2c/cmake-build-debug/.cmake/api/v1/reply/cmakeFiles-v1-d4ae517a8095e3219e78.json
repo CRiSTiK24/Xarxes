@@ -21,6 +21,11 @@
 		{
 			"isCMake" : true,
 			"isExternal" : true,
+			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/CMakeUnixFindMake.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
 			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/CMakeSystemSpecificInitialize.cmake"
 		},
 		{
@@ -295,6 +300,21 @@
 		{
 			"isCMake" : true,
 			"isExternal" : true,
+			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/CMakeFindCodeBlocks.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/CMakeExtraGeneratorDetermineCompilerMacrosAndIncludeDirs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/ProcessorCount.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
 			"path" : "/cygdrive/c/Users/CRiSTiK/AppData/Local/JetBrains/CLion2022.2/cygwin_cmake/share/cmake-3.23.2/Modules/CMakeCInformation.cmake"
 		},
 		{
@@ -424,8 +444,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/client/cmake-build-debug",
-		"source" : "/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/client"
+		"build" : "/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/P2c/cmake-build-debug",
+		"source" : "/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/P2c"
 	},
 	"version" : 
 	{

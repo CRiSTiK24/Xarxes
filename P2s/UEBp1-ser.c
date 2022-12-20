@@ -47,7 +47,7 @@ int main(int argc,char *argv[])
     int portTCPcli;
     char tipusPeticio[4];
     char nomFitx[10000];
-
+    int LongLlistaSck[2];
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBs_IniciaServ(&socket, portTCPser, missatgeError) == -1)
