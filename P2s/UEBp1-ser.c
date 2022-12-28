@@ -52,7 +52,7 @@ int main(int argc,char *argv[])
 
     int InicialitzadorSockets = 0;
     while(InicialitzadorSockets<LongLlistaSck){
-        LlistaSck[i] = -1;
+        LlistaSck[InicialitzadorSockets] = -1;
         InicialitzadorSockets++;
     }
     
