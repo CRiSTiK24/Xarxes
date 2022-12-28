@@ -72,7 +72,7 @@ int main(int argc,char *argv[])
 
             int LlistarSockets = 0;
             while(LlistarSockets<LongLlistaSck){
-                printf("LlistaSck[%d] = %d\n\0", i, LlistaSck[i]);
+                printf("LlistaSck[%d] = %d\n\0", LlistarSockets, LlistaSck[LlistarSockets]);
                 LlistarSockets++;
             }
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
