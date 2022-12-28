@@ -69,6 +69,7 @@ int main(int argc,char *argv[])
 
         while(1){
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
+            printf("Ha arribat alguna cosa: %d\n\0", haArribatAlgo);
             if(haArribatAlgo == -1){
                 printf("Error: Error al Ha Arribat Alguna Cosa\n\0");
                 printf("%s\n",missatgeError);
@@ -77,6 +78,8 @@ int main(int argc,char *argv[])
                 printf("No ha arribat res \n\0");
             }
             else{
+
+                printf("ELSE,ELSE,ELSE,ELSE,ELSE,ELSE\n\0");
                 int trobat = 0;
                 int i = 0;
                 while(!trobat && i<LongLlistaSck){
