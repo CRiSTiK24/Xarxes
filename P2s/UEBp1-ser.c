@@ -81,7 +81,15 @@ int main(int argc,char *argv[])
                         i++;
                     }
                 }
-                if(trobat){
+                if(socket == haArribatAlgo){
+                    int socketAccepta;
+                    if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
+                        printf("Error al acceptar connexió\n\0");
+                        printf("%s\n",missatgeError);
+                    }
+                    AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
+                }
+                else if(trobat){
                     int retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
                     if(retorn == -3)
                     {
@@ -121,12 +129,7 @@ int main(int argc,char *argv[])
                     }
                 }
                 else{
-                    int socketAccepta;
-                    if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
-                        printf("Error al acceptar connexió\n\0");
-                        printf("%s\n",missatgeError);
-                    }
-                    AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
+                    printf("No ha arribat ni socket ni algo de la llista, que ha pasat?\n\0");
                 }
             }
         }
