@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
                 if(socket == haArribatAlgo){
                     printf("Ha arribat una nova connexió\n\0");
                     int socketAccepta = socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError);
-                    printf("Socket ser:%s",socketAccepta);
+                    printf("Socket ser:%d",socketAccepta);
                     if(socketAccepta == -1){
                         printf("Error al acceptar connexió\n\0");
                         printf("%s\n",missatgeError);
