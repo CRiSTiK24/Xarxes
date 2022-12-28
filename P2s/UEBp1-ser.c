@@ -73,7 +73,7 @@ int main(int argc,char *argv[])
             else{
                 int trobat = 0;
                 int i = 0;
-                while(!trobat and i<LongLlistaSck){
+                while(!trobat && i<LongLlistaSck){
                     if(LlistaSck[i]==haArribatAlgo){
                         trobat = 1;
                     }
