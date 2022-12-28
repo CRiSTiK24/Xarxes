@@ -403,7 +403,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *TextRes)
 {
     int retornada = 0;
-	retornada = TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, -1)
+	retornada = TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, -1);
     if(retornada == -1)
 	{
 		char tmp[200] = " \0";
