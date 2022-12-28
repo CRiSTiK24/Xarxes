@@ -98,6 +98,8 @@ int main(int argc,char *argv[])
                         printf("Error al acceptar connexió\n\0");
                         printf("%s\n",missatgeError);
                     }
+                    printf("La ip del client és %s i el port %d\n",IPcli,portTCPcli);
+                    printf("El socket de la connexió és %d\n",socketAccepta);
                     AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
                 }
                 else if(trobat){
