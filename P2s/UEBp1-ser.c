@@ -69,8 +69,11 @@ int main(int argc,char *argv[])
 
         while(1){
             printf("LISTA DE SOCKETS: \n\0");
-            for(int i = 0; i<LongLlistaSck; i++){
+
+            int LlistarSockets = 0;
+            while(LlistarSockets<LongLlistaSck){
                 printf("LlistaSck[%d] = %d\n\0", i, LlistaSck[i]);
+                LlistarSockets++;
             }
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
             printf("Ha arribat alguna cosa: %d\n\0", haArribatAlgo);
