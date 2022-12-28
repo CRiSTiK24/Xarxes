@@ -178,6 +178,7 @@ int TCP_AcceptaConnexio(int Sck, char *IPrem, int *portTCPrem)
 	strcpy(IPrem, inet_ntoa(adrrem.sin_addr));
 	/* htons() fa l'operació inversa de htons() 			  			  */
 	*portTCPrem = ntohs(adrrem.sin_port);
+	printf("socketnouTCPAcceptaConnexio: scon = %d\n", scon);
 	return scon;
 }
 
@@ -327,14 +328,12 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	FD_ZERO(&conjunt); /* esborrem el contingut de la llista 			  */
 	int i = 0;
 
-	printf("TCP_HaArribatAlgunaCosaCHECKPOINT0\n\0");
 	for(i = 0; i < LongLlistaSck; i++) 
 	{
 		/* afegim ("marquem") els elements de LlistaSck al conjunt 		  */
 		FD_SET(LlistaSck[i], &conjunt); 
 		if(LlistaSck[i] > descmax) descmax = LlistaSck[i];//+1 sobra?
 	}
-	printf("TCP_HaArribatAlgunaCosaCHECKPOINT1\n\0");
 	if(Temps == -1) 
 	{
 		printf("TEMPS -1\n\0");
@@ -352,7 +351,6 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 			return -2;
 		}
 	}
-	printf("TCP_HaArribatAlgunaCosaCHECKPOINT2\n\0");
 	i = 0;
 	int trobat = 0;
 	while(i <= LongLlistaSck && (trobat==0)) 
