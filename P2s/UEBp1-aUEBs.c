@@ -105,6 +105,7 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
         retornada = -1;
     }
     else {
+        printf("PRE: socketnouUEBAcceptaConnexio: scon = %d\n", retornada);
         char tmp[200] = "EXIT: S'ha pogut acceptar la conexio "
                         "entre el Socket local amb Ip remota\0";
         strcpy(MisRes,tmp);
@@ -117,6 +118,7 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
             retornada = -1;
         }
     }
+    printf("POST: socketnouUEBAcceptaConnexio: scon = %d\n", retornada);
     return retornada;
 }
 
