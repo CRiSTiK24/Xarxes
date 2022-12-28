@@ -63,6 +63,7 @@ int main(int argc,char *argv[])
 
         while(1){
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
+            printf("Checkpoint0\n\0");
             if(haArribatAlgo == -1){
                 printf("Error: Error al Ha Arribat Alguna Cosa\n\0");
                 printf("%s\n",missatgeError);
