@@ -49,6 +49,10 @@ int main(int argc,char *argv[])
     char nomFitx[10000];
     const int LongLlistaSck = 10;
     int LlistaSck[LongLlistaSck];
+
+    for(int i = 0; i<LongLlistaSck; i++){
+        LlistaSck[i] = -1;
+    }
     
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */

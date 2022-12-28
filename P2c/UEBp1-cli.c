@@ -49,7 +49,7 @@ int main(int argc,char *argv[])
 	{
         printf("%s\n",missatgeError);
     }
-    else 
+    else
 	{
 		printf("CHECKPOINT 1\n");
         if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1)

@@ -332,7 +332,7 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	{
 		/* afegim ("marquem") els elements de LlistaSck al conjunt 		  */
 		FD_SET(LlistaSck[i], &conjunt); 
-		if(LlistaSck[i] > descmax) descmax = LlistaSck[i]+1;
+		if(LlistaSck[i] > descmax) descmax = LlistaSck[i];//+1 sobra?
 	}
 	printf("TCP_HaArribatAlgunaCosaCHECKPOINT1\n\0");
 	if(Temps == -1) 
