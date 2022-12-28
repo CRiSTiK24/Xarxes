@@ -101,8 +101,9 @@ int main(int argc,char *argv[])
                 printf("socket: %d\n\0", socket);
                 if(socket == haArribatAlgo){
                     printf("Ha arribat una nova connexió\n\0");
-                    int socketAccepta;
-                    if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
+                    int socketAccepta = socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError);
+                    printf("%s",socketAccepta);
+                    if(socketAccepta == -1){
                         printf("Error al acceptar connexió\n\0");
                         printf("%s\n",missatgeError);
                     }
