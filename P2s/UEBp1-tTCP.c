@@ -326,12 +326,15 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	int descmax = -1; /* número de descriptor de fitxer major 			  */
 	FD_ZERO(&conjunt); /* esborrem el contingut de la llista 			  */
 	int i = 0;
+
+	printf("TCP_HaArribatAlgunaCosaCHECKPOINT0\n\0");
 	for(i = 0; i < LongLlistaSck; i++) 
 	{
 		/* afegim ("marquem") els elements de LlistaSck al conjunt 		  */
 		FD_SET(LlistaSck[i], &conjunt); 
 		if(LlistaSck[i] > descmax) descmax = LlistaSck[i]+1;
 	}
+	printf("TCP_HaArribatAlgunaCosaCHECKPOINT1\n\0");
 	if(Temps == -1) 
 	{
 		if(select(descmax+1, &conjunt, NULL, NULL, NULL) == -1)
@@ -346,6 +349,7 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 			return -2;
 		}
 	}
+	printf("TCP_HaArribatAlgunaCosaCHECKPOINT2\n\0");
 	i = 0;
 	int trobat = 0;
 	while(i <= LongLlistaSck && (trobat==0)) 

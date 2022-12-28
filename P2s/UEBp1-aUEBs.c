@@ -402,12 +402,14 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 /*  -1 si hi ha error.                                                    */
 int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *TextRes)
 {
+    printf("UEBs_HaArribatAlgunaCosaCHECKPOINT0\n\0");
 	if (TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, -1) == -1)
 	{
 		char tmp[200] = " \0";
         strncpy(TextRes, tmp, strlen(tmp));
         TextRes[sizeof TextRes - 1] = '\0';
 	}
+    printf("UEBs_HaArribatAlgunaCosaCHECKPOINT1\n\0");
 	char tmp[200] = " \0";
     strncpy(TextRes, tmp, strlen(tmp));
     TextRes[sizeof TextRes - 1] = '\0';
