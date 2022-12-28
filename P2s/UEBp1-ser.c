@@ -190,13 +190,13 @@ int TreuSck(int Sck, int *LlistaSck, int LongLlistaSck)
 	int retornada = 0;
 	for (i = 0; i < LongLlistaSck; i++) 
 	{
-		if (LlistSck[i] == Sck)
+		if (LlistaSck[i] == Sck)
 		{
 			pos = i;
 			break;
 		}
 	}
-	if (pos != Sck) LlistSck[pos] = -1; 
+	if (pos != Sck) LlistaSck[pos] = -1; 
 	else retornada = -1;
 	return retornada;
 }
