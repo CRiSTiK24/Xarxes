@@ -93,6 +93,7 @@ int main(int argc,char *argv[])
                 printf("L'hem trobat o no? %d\n\0", trobat);
                 printf("socket: %d\n\0", socket);
                 if(socket == haArribatAlgo){
+                    printf("Ha arribat una nova connexió\n\0");
                     int socketAccepta;
                     if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
                         printf("Error al acceptar connexió\n\0");
