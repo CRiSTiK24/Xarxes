@@ -339,7 +339,6 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 	{
 		printf("TEMPS -1\n\0");
 		printf("Descmax: %d\n\0", descmax);
-		printf("Conjunt: %d\n\0", conjunt);
 		if(select(descmax+1, &conjunt, NULL, NULL, NULL) == -1)
 		{
 			printf("No arriba aqui\n\0");

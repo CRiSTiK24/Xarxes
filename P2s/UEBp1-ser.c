@@ -69,7 +69,6 @@ int main(int argc,char *argv[])
 
         while(1){
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
-            printf("Checkpoint0\n\0");
             if(haArribatAlgo == -1){
                 printf("Error: Error al Ha Arribat Alguna Cosa\n\0");
                 printf("%s\n",missatgeError);
@@ -80,7 +79,6 @@ int main(int argc,char *argv[])
             else{
                 int trobat = 0;
                 int i = 0;
-                printf("Checkpoint1\n\0");
                 while(!trobat && i<LongLlistaSck){
                     if(LlistaSck[i]==haArribatAlgo){
                         trobat = 1;
@@ -89,9 +87,7 @@ int main(int argc,char *argv[])
                         i++;
                     }
                 }
-                printf("Checkpoint2\n\0");
                 if(socket == haArribatAlgo){
-                    printf("Checkpoint3\n\0");
                     int socketAccepta;
                     if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
                         printf("Error al acceptar connexió\n\0");
