@@ -73,6 +73,7 @@ int main(int argc,char *argv[])
             else{
                 int trobat = 0;
                 int i = 0;
+                printf("Checkpoint1\n\0");
                 while(!trobat && i<LongLlistaSck){
                     if(LlistaSck[i]==haArribatAlgo){
                         trobat = 1;
@@ -81,7 +82,9 @@ int main(int argc,char *argv[])
                         i++;
                     }
                 }
+                printf("Checkpoint2\n\0");
                 if(socket == haArribatAlgo){
+                    printf("Checkpoint3\n\0");
                     int socketAccepta;
                     if(socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError) == -1){
                         printf("Error al acceptar connexió\n\0");
@@ -90,6 +93,7 @@ int main(int argc,char *argv[])
                     AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
                 }
                 else if(trobat){
+                    printf("Checkpoint4\n\0");
                     int retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
                     if(retorn == -3)
                     {
