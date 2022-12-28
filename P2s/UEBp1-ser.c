@@ -117,7 +117,8 @@ int main(int argc,char *argv[])
                     {
                         printf("Error al servir petició -3\n\0");
                         printf("%s\n",missatgeError);
-                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
+                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
                             printf("%s\n",missatgeError);
                         }
@@ -126,7 +127,8 @@ int main(int argc,char *argv[])
                     {
                         printf("Error al servir petició -2\n\0");
                         printf("%s\n",missatgeError);
-                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
+                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
                             printf("%s\n",missatgeError);
                         }
@@ -135,7 +137,8 @@ int main(int argc,char *argv[])
                     {
                         printf("Error al servir petició -4\n\0");
                         printf("%s\n",missatgeError);
-                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
+                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
                             printf("%s\n",missatgeError);
                         }
@@ -144,7 +147,8 @@ int main(int argc,char *argv[])
                     {
                         printf("Error al servir petició -1\n\0");
                         printf("%s\n",missatgeError);
-                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
+                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
                             printf("%s\n",missatgeError);
                         }
