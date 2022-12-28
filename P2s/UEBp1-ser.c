@@ -68,6 +68,10 @@ int main(int argc,char *argv[])
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
 
         while(1){
+            printf("LISTA DE SOCKETS: \n\0");
+            for(int i = 0; i<LongLlistaSck; i++){
+                printf("LlistaSck[%d] = %d\n\0", i, LlistaSck[i]);
+            }
             int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
             printf("Ha arribat alguna cosa: %d\n\0", haArribatAlgo);
             if(haArribatAlgo == -1){
