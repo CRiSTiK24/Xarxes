@@ -347,8 +347,8 @@ int TCP_HaArribatAlgunaCosaEnTemps(const int *LlistaSck, int LongLlistaSck, int 
 		}
 	}
 	i = 0;
-	bool trobat = false;
-	while(i <= LongLlistaSck && !trobat) 
+	int trobat = 0;
+	while(i <= LongLlistaSck && (trobat==0)) 
 	{
 		if(FD_ISSET(LlistaSck[i], &conjunt)) trobat = 1;
 		else i++;
