@@ -50,8 +50,10 @@ int main(int argc,char *argv[])
     const int LongLlistaSck = 10;
     int LlistaSck[LongLlistaSck];
 
-    for(int i = 0; i<LongLlistaSck; i++){
+    int InicialitzadorSockets = 0;
+    while(InicialitzadorSockets<LongLlistaSck){
         LlistaSck[i] = -1;
+        InicialitzadorSockets++;
     }
     
 
