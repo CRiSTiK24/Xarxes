@@ -413,5 +413,5 @@ int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *Text
 	char tmp[200] = " \0";
     strncpy(TextRes, tmp, strlen(tmp));
     TextRes[sizeof TextRes - 1] = '\0';
-	return TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, 1000); //1sec
+	return TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, -1);
 }
