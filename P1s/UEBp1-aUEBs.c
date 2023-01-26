@@ -293,6 +293,50 @@ int UEBs_TancaConnexio(int SckCon, char *MisRes)
 	
 } */
 
+/* Accedeix a la configuració del servidor localitzada a ser                     */
+/*                                                                        */
+/* "tipus" és un "string" de C (vector de chars imprimibles acabat en     */
+/* '\0') d'una longitud de 4 chars (incloent '\0').                       */
+/* "info1" és un vector de chars (bytes) qualsevol (recordeu que en C,    */
+/* un char és un enter de 8 bits) d'una longitud <= 9999 bytes.           */
+/*                                                                        */
+/* Retorna:                                                               */
+/*  0 si tot va bé;                                                       */
+/* -1 si hi ha un error a la interfície de sockets;                       */
+/* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
+int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes){
+
+    int llargadaPath = strlen(getcwd(NULL, 0));
+    char path[10000];
+    memcpy(path, getcwd(NULL, 0), llargadaPath);
+    memcpy(path + llargadaPath, "ser.cfg", 6);
+    path[llargadaPath+6] = '\0';
+
+    int retornada = 0;
+    FILE *fp;
+
+    fp = fopen(path, "r"); // open the file in read mode
+    if (fp == NULL) {
+        retornada = -1;
+        char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer\0";
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+    }
+    else{
+        if(fgets(arrelUEB, 100, fp) == NULL) {
+        retornada = -1;
+        char tmp[200] = "ERROR: Al mostrar fitxer\0";
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+        }
+        else{
+            char tmp[200] = "EXIT: Al mostrar fitxer\0";
+            fclose(fp); // close the file
+        }
+    
+    }
+    return 0;
+}
 /* "Construeix" un missatge de PUEB a partir dels seus camps tipus,       */
 /* long1 i info1, escrits, respectivament a "tipus", "long1" i "info1"    */
 /* (que té una longitud de "long1" bytes), i l'envia a través del         */

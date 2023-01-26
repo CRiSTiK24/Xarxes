@@ -1,3 +1,0 @@
-/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug/CMakeFiles/server.dir
-/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/CRiSTiK/Desktop/git/Xarxes/server/cmake-build-debug/CMakeFiles/rebuild_cache.dir

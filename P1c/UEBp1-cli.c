@@ -32,33 +32,63 @@ int main(int argc,char *argv[])
 	/* Declaració de variables, p.e., int n;                              */
     int socket;
     char missatgeError[200];
-    char IPser[16] = "10.100.100.101\0"; // TODO: fer que es llegeixi de teclat
-    int portTCPser = 45456;
+    char IPser[16]; //= "10.100.100.101\0"; // TODO: fer que es llegeixi de teclat
+    //int portTCPser = 45456;
     char IPcli[16] = "10.100.100.102\0";
     int portTCPcli = 0; // despres farem que es llegeixi de fitxer
     //char tiposPeticio[4] = "OBT\0";
-    char nomFitx[10000] = "/llocUEB/primera.html\0"; //TODO: fer que es llegeixi de teclat
+    //char nomFitx[10000] = "/llocUEB/primera.html\0"; //TODO: fer que es llegeixi de teclat
     char fitxer[10000];
     int longFitx = 0;
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
+    char uri[100];
+	char esquema[100], nom_host[100], nomFitx[10000];
+	int portTCPser;
+	int n;
+	 
+	/* Es demana un URI */
+	printf("\n");
+	printf("URI: ");
+	int escanejat = scanf("%s", uri);
+	
+    while(scanf != 0){ //finalitzem quan el usuari no posi res al scanf
+        /* Es desfà l'URI, mètode 1 */ 
+        n = desferURIm1(uri, esquema, nom_host, &portTCPser, nomFitx);
+        memcpy(IPser, nom_host, 16); //Aqui el host sempre sera la ip. No es pot fer servir DNS
 
-    if(socket == -1)
-	{
-        printf("%s\n",missatgeError);
-    }
-    else 
-	{
-        if(UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError) == -1)
-		{
+        socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
+
+        int conexioActiva = 0;
+        if(socket == -1)
+        {
             printf("%s\n",missatgeError);
         }
-        printf("%s\n",fitxer);
-        if(UEBc_TancaConnexio(socket,missatgeError) == -1)
-		{
-            printf("%s\n",missatgeError);
+        else 
+        {
+            conexioActiva = 1;
+            int estatusFitxer = UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError);
+            while (estatusFitxer != -3)
+            {
+                if(estatusFitxer == -1)
+                {
+                    printf("%s\n",missatgeError);
+                }
+                else{
+                    printf("%s\n",fitxer);
+                }
+
+            }
         }
+        if(conexioActiva == 1){
+            if(UEBc_TancaConnexio(socket,missatgeError) == -1)
+            {
+                printf("%s\n",missatgeError);
+            }
+        }
+        printf("\n");
+        printf("URI: ");
+        escanejat = scanf("%s", uri);
     }
     return 0;
 }
@@ -73,3 +103,56 @@ int main(int argc,char *argv[])
 	
 } */
 
+
+/* Desfà l'URI "uri" en les seves parts: l'esquema (protocol) "esq", el   */
+/* nom DNS (o l'@IP), el "nom_host", el número de port "port" i el nom    */
+/* del fitxer "nom_fitxer".                                               */
+/*                                                                        */
+/* L'URI ha de tenir la forma "esq://nom_host:port/nom_fitxer" o bé       */
+/* sense el número de port "esq://nom_host/nom_fitxer", i llavors port    */
+/* s'emplena amb el valor 0 (la resta de casos no es contemplen).         */
+/*                                                                        */
+/* "uri", "esq", "nom_host" i "nom_fitxer" són "strings" de C (vector de  */
+/* chars imprimibles acabat en '\0') d'una longitud suficient.            */
+/*                                                                        */
+/* Retorna:                                                               */
+/*  el nombre de parts de l'URI que s'han assignat (4 si l'URI tenia      */
+/*  número de port o 3 si no en tenia.                                    */
+int desferURIm1(const char *uri, char *esq, char *nom_host, int *port, char *nom_fitx)
+{
+	int nassignats;
+	char port_str[100];
+	 
+	strcpy(esq, "");
+	strcpy(nom_host, "");
+	*port = 0;
+	strcpy(nom_fitx, "");
+
+	nassignats = sscanf(uri, "%[^:]://%[^:]:%[^/]%s", esq, nom_host, port_str, nom_fitx);
+	 
+	/*
+	printf("nassignats %d\n",nassignats);
+	printf("esq %s\n", esq);
+	printf("nom_host %s\n", nom_host);
+	printf("port_str %s\n", port_str);
+	printf("nom_fitx %s\n", nom_fitx);
+	*/
+	 
+	/* URIs amb #port, p.e., esq://host:port/fitx, 4 valors assignats */
+	if(nassignats == 4)
+	{
+		*port = atoi(port_str);
+		return nassignats;
+	}  
+	  
+	/* URIs sense #port, p.e., esq://host/fitx, 2 valors assignats,  */
+	/* i llavors es fa port = 0.                                     */
+	if(nassignats == 2)
+	{
+		*port = 0;
+		nassignats = sscanf(uri, "%[^:]://%[^/]%s", esq, nom_host, nom_fitx);
+		return nassignats;
+	}
+
+	return nassignats;
+}
