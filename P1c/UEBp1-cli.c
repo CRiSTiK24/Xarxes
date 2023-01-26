@@ -16,6 +16,7 @@
 #include "UEBp1-aUEBc.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* Definició de constants, p.e.,                                          */
 
@@ -25,7 +26,9 @@
 /* (les  definicions d'aquestes funcions es troben més avall) per així    */
 /* fer-les conegudes des d'aquí fins al final d'aquest fitxer, p.e.,      */
 
+int desferURIm1(const char *uri, char *esq, char *nom_host, int *port, char *nom_fitx);
 /* int FuncioInterna(arg1, arg2...);                                      */
+
 
 int main(int argc,char *argv[])
 {
@@ -56,6 +59,10 @@ int main(int argc,char *argv[])
         /* Es desfà l'URI, mètode 1 */ 
         n = desferURIm1(uri, esquema, nom_host, &portTCPser, nomFitx);
         memcpy(IPser, nom_host, 16); //Aqui el host sempre sera la ip. No es pot fer servir DNS
+
+        printf("IPservidor: %s\n",IPser);
+        printf("PORTservidor: %d\n",portTCPser);
+        printf("NomFitxer: %s\n",nomFitx);
 
         socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
 
