@@ -19,6 +19,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include <fcntl.h> 
 
 /* Definició de constants, p.e.,                                          */
 
@@ -42,30 +45,57 @@ int main(int argc,char *argv[])
     int portTCPcli;
     char tipusPeticio[4];
     char nomFitx[10000];
+    char arrelUEB[10000];
+    char path[10000]; 
+    
+    memcpy(path,getcwd(NULL, 0),strlen(getcwd(NULL, 0)));
+    memcpy(path+strlen(getcwd(NULL, 0)),"/ser.log",8);
+    path[strlen(getcwd(NULL, 0))+8] = '\0';
 
+    int fitxerLog = open(path, O_CREAT| O_WRONLY | O_TRUNC);
+    if(fitxerLog < 0){
+        printf("Error al crear fitxer log amb: %s\n",path);
+    }
+    else{
+        char exit[100] = "Exit al crear fitxer log\n\0";
+        write(fitxerLog,exit,strlen(exit));
+    }
 
+    int arrelDiferent = UEBs_ConfiguracioServer(arrelUEB, missatgeError);
+    if(arrelDiferent!=0){
+        //printf("Error al llegir la configuració\n\0");
+        printf("%s\n",missatgeError);
+    }
+    else{
+        char exit[100] = "Exit al cambiar la arrel del servidor a partir del fitxer de configuració\n\0";
+        write(fitxerLog,exit,strlen(exit));
+    }
 	/* Expressions, estructures de control, crides a funcions, etc.       */
     if(UEBs_IniciaServ(&socket, portTCPser, missatgeError) == -1)
 	{
         printf("%s\n",missatgeError);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
     }
     else 
 	{
-
+        write(fitxerLog,missatgeError,strlen(missatgeError));
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
         if((socketConnexio = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError)) == -1)
 		{
-            printf("Error al acceptar connexió\n\0");
+        write(fitxerLog,missatgeError,strlen(missatgeError));
+            printf("Error al acceptar connexió\n");
             printf("%s\n",missatgeError);
         }
         else 
 		{
+        write(fitxerLog,missatgeError,strlen(missatgeError));
             int retorn;
             do{
                 retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
                 if(retorn == -3)
                 {
-                    printf("Error al servir petició -3\n\0");
+                    printf("Error al servir petició -3\n");
                     printf("%s\n",missatgeError);
                     if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
                     {
@@ -74,7 +104,7 @@ int main(int argc,char *argv[])
                 }
                 else if(retorn == -2)
                 {
-                    printf("Error al servir petició -2\n\0");
+                    printf("Error al servir petició -2\n");
                     printf("%s\n",missatgeError);
                     if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
                     {
@@ -83,7 +113,7 @@ int main(int argc,char *argv[])
                 }
                 else if(retorn == -4)
                 {
-                    printf("Error al servir petició -4\n\0");
+                    printf("Error al servir petició -4\n");
                     printf("%s\n",missatgeError);
                     if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
                     {
@@ -92,7 +122,7 @@ int main(int argc,char *argv[])
                 }
                 else if(retorn == -1)
                 {
-                    printf("Error al servir petició -1\n\0");
+                    printf("Error al servir petició -1\n");
                     printf("%s\n",missatgeError);
                     if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
                     {
@@ -104,7 +134,9 @@ int main(int argc,char *argv[])
             
         }
         UEBs_TancaConnexio(socket, missatgeError);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
     }
+    close(fitxerLog);
     
     return 0;
 }
