@@ -51,8 +51,8 @@ int main(int argc,char *argv[])
 	int n;
 	 
 	/* Es demana un URI */
-	printf("\n");
-	printf("URI: ");
+	printf("Entra la URL del que vols obtenir amb format protocol://ip:port/nomFitxer\n");
+    printf("per exemple, patata://10.100.100.102:45456/ser.cfg: ");
 	int escanejat = scanf("%s", uri);
 	
     while(scanf != 0){ //finalitzem quan el usuari no posi res al scanf
@@ -83,10 +83,13 @@ int main(int argc,char *argv[])
                 }
                 else{
                     printf("%s\n",fitxer);
+                    printf("Insereix el nom del fitxer que vols obtenir,per exemple, /ser.cfg: ");
+                    escanejat = scanf("%s", nomFitx);
+                    int estatusFitxer = UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError);
                 }
-
             }
         }
+        printf("El servidor ha tancat conexió: \n");
         if(conexioActiva == 1){
             if(UEBc_TancaConnexio(socket,missatgeError) == -1)
             {

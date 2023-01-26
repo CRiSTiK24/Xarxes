@@ -47,6 +47,7 @@ int main(int argc,char *argv[])
     char nomFitx[10000];
     char arrelUEB[10000];
     char path[10000]; 
+    int retorn;
     
     memcpy(path,getcwd(NULL, 0),strlen(getcwd(NULL, 0)));
     memcpy(path+strlen(getcwd(NULL, 0)),"/ser.log",8);
@@ -80,6 +81,7 @@ int main(int argc,char *argv[])
 	{
         write(fitxerLog,missatgeError,strlen(missatgeError));
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
+        do{
         if((socketConnexio = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError)) == -1)
 		{
         write(fitxerLog,missatgeError,strlen(missatgeError));
@@ -89,50 +91,49 @@ int main(int argc,char *argv[])
         else 
 		{
         write(fitxerLog,missatgeError,strlen(missatgeError));
-            int retorn;
-            do{
-                retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);
-        write(fitxerLog,missatgeError,strlen(missatgeError));
-                if(retorn == -3)
-                {
-                    printf("Error al servir petició -3\n");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                do{
+                    retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);
+                    write(fitxerLog,missatgeError,strlen(missatgeError));
+                    if(retorn == -3)
                     {
                         printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                        }
                     }
-                }
-                else if(retorn == -2)
-                {
-                    printf("Error al servir petició -2\n");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    else if(retorn == -2)
                     {
                         printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                        }
                     }
-                }
-                else if(retorn == -4)
-                {
-                    printf("Error al servir petició -4\n");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    else if(retorn == -4)
                     {
                         printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                        }
                     }
-                }
-                else if(retorn == -1)
-                {
-                    printf("Error al servir petició -1\n");
-                    printf("%s\n",missatgeError);
-                    if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                    else if(retorn == -1)
                     {
+                        write(fitxerLog,missatgeError,strlen(missatgeError));
                         printf("%s\n",missatgeError);
+                        if(UEBs_TancaConnexio(socketConnexio, missatgeError) == -1)
+                        {
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                        }
                     }
-                }
-            }
-            while(retorn>0);
-            
-        }
+                }while(retorn >= 0);
+            } 
+        }while(retorn != -3);
         UEBs_TancaConnexio(socket, missatgeError);
         write(fitxerLog,missatgeError,strlen(missatgeError));
     }
