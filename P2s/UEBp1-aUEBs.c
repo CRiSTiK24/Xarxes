@@ -26,6 +26,17 @@
 
 /* Definició de constants, p.e.,                                          */
 
+struct PaquetUEB{
+    int SckEsc;
+    int SckCon;
+    int portTCPser;
+    int portTCPcli;
+    char MisRes[200];
+    char *IPser;
+    char *IPcli;
+    int *portTCPser;
+}
+
 /* #define XYZ       1500                                                 */
 
 /* Declaració de funcions INTERNES que es fan servir en aquest fitxer     */
@@ -105,7 +116,6 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
         retornada = -1;
     }
     else {
-        printf("PRE: socketnouUEBAcceptaConnexio: scon = %d\n", retornada);
         char tmp[200] = "EXIT: S'ha pogut acceptar la conexio "
                         "entre el Socket local amb Ip remota\0";
         strcpy(MisRes,tmp);
@@ -118,7 +128,6 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
             retornada = -1;
         }
     }
-    printf("POST: socketnouUEBAcceptaConnexio: scon = %d\n", retornada);
     return retornada;
 }
 
@@ -142,8 +151,9 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
 /* -3 si l'altra part tanca la connexió;                                  */
 /* -4 si hi ha problemes amb el fitxer de la petició (p.e., nomfitxer no  */
 /*  comença per /, fitxer no es pot llegir, fitxer massa gran, etc.).     */
-int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *MisRes)
+int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelDiferent,char *arrelUEB, char *MisRes)
 {
+    char path[10000];
     int retornada = 0;
     int tamanyFitxer;
 
@@ -178,15 +188,24 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
     }
     else 
 	{
-
+        if(arrelDiferent!=0){
         int llargadaPath = strlen(getcwd(NULL, 0));
 
-        char path[10000];
+        
 
         memcpy(path, getcwd(NULL, 0), llargadaPath);
 
         memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
         path[llargadaPath+tamanyFitxer] = '\0';
+        }
+        else{
+            int llargadaPath = strlen(arrelUEB);
+
+            memcpy(path, arrelUEB, llargadaPath);
+
+            memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
+            path[llargadaPath+tamanyFitxer] = '\0';
+        }
         struct stat informacioFitxer;
         if (stat(path, &informacioFitxer) == -1) 
 		{
@@ -213,7 +232,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
             int fdArchiu = open(path, O_RDONLY);
             if(fdArchiu == -1) {
                 retornada = -4;
-                char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer\0";
+                char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer: \0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
@@ -295,6 +314,65 @@ int UEBs_TancaConnexio(int SckCon, char *MisRes)
 	
 } */
 
+/* Accedeix a la configuració del servidor localitzada a ser                     */
+/*                                                                        */
+/* Si la troba, llavors llegeix el fitxer i guarda el contingut de la primera linea
+a la array de chars "ArrelUEB". Comprova despres que la primera linea de aquesta
+tingui la paraula clau "Arrel" al principi*/
+/* arrelUEB és una string amb capacitat per 10000 caractes, mentre que misres
+n'es altre amb capacitat per 200*/
+/*                                                                        */
+/* Retorna:                                                               */
+/*  0 si tot va bé;                                                       */
+/* -1 si no s'ha pogut llegir el fitxer;                       */
+/* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
+int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes){
+
+    int llargadaPath = strlen(getcwd(NULL, 0));
+    char path[10000];
+    memcpy(path, getcwd(NULL, 0), llargadaPath);
+    memcpy(path + llargadaPath, "/ser.cfg", 8);
+    path[llargadaPath+8] = '\0';
+
+    int retornada = 0;
+    FILE *fp;
+
+    fp = fopen(path, "r"); // open the file in read mode
+    if (fp == NULL) {
+        printf("%s", path);
+        retornada = -1;
+        char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer de configuracio\0";
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+    }
+    else{
+        if(fgets(arrelUEB, 10000, fp) == NULL) { //copiem els 6 primers caractes de fp a arrelUEB, per tant, sobreescrivim la arrel
+        retornada = -1;
+        char tmp[200] = "ERROR: Al llegir de la configuracio del servidor\0";
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+        }
+        else{
+            char principi[6];
+            memcpy(principi,arrelUEB,6);
+            principi[5] = '\0';
+            if(strcmp(principi,"Arrel")==0){
+                char tmp[200] = "EXIT: Al aconseguir arrel\0";
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
+            }
+            else{
+                printf("%s\n",principi);
+                retornada = -2;
+                char tmp[200] = "ERROR: La primera linea no és \"Arrel\"\0";
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
+            }
+            fclose(fp); // close the file
+        }
+    }
+    return retornada;
+}
 /* "Construeix" un missatge de PUEB a partir dels seus camps tipus,       */
 /* long1 i info1, escrits, respectivament a "tipus", "long1" i "info1"    */
 /* (que té una longitud de "long1" bytes), i l'envia a través del         */

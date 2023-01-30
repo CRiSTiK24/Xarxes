@@ -22,4 +22,5 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *Mis
 int UEBs_TancaConnexio(int SckCon, char *MisRes);
 int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *TextRes);
 int UEBs_TancaConnexio(int SckCon, char *TextRes);
+int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes);
 /* int UEBs_FuncioExterna(arg1, arg2...);                                 */

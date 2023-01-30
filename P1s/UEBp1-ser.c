@@ -84,7 +84,7 @@ int main(int argc,char *argv[])
         do{
         if((socketConnexio = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError)) == -1)
 		{
-        write(fitxerLog,missatgeError,strlen(missatgeError));
+            write(fitxerLog,missatgeError,strlen(missatgeError));
             printf("Error al acceptar connexió\n");
             printf("%s\n",missatgeError);
         }

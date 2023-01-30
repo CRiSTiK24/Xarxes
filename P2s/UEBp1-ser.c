@@ -19,12 +19,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include <fcntl.h> 
 
 /* Definició de constants, p.e.,                                          */
 
 /* #define XYZ       1500                                                 */
 
 #define NOMBRECONNSMAX		2
+#define TRUE 1
+#define FALSE 0
 
 int AfegeixSck(int Sck, int *LlistaSck, int LongLlistaSck);
 int TreuSck(int Sck, int *LlistaSck, int LongLlistaSck);
@@ -49,6 +54,33 @@ int main(int argc,char *argv[])
     char nomFitx[10000];
     const int LongLlistaSck = 10;
     int LlistaSck[LongLlistaSck];
+    char path[10000]; 
+    char arrelUEB[10000];
+    int continuarServidor = TRUE; //true
+
+
+    memcpy(path,getcwd(NULL, 0),strlen(getcwd(NULL, 0)));
+    memcpy(path+strlen(getcwd(NULL, 0)),"/ser.log",8);
+    path[strlen(getcwd(NULL, 0))+8] = '\0';
+
+    int fitxerLog = open(path, O_CREAT| O_WRONLY | O_TRUNC);
+    if(fitxerLog < 0){
+        printf("Error al crear fitxer log amb: %s\n",path);
+    }
+    else{
+        char exit[100] = "Exit al crear fitxer log\n\0";
+        write(fitxerLog,exit,strlen(exit));
+    }
+
+    int arrelDiferent = UEBs_ConfiguracioServer(arrelUEB, missatgeError);
+    if(arrelDiferent!=0){
+        //printf("Error al llegir la configuració\n\0");
+        printf("%s\n",missatgeError);
+    }
+    else{
+        char exit[100] = "Exit al cambiar la arrel del servidor a partir del fitxer de configuració\n\0";
+        write(fitxerLog,exit,strlen(exit));
+    }
 
     int InicialitzadorSockets = 0;
     while(InicialitzadorSockets<LongLlistaSck){
@@ -61,13 +93,17 @@ int main(int argc,char *argv[])
     if(UEBs_IniciaServ(&socket, portTCPser, missatgeError) == -1)
 	{
         printf("%s\n",missatgeError);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
     }
     else 
 	{
         AfegeixSck(socket, LlistaSck,LongLlistaSck);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
+        AfegeixSck(0, LlistaSck,LongLlistaSck); //afegim el teclat a la llista
+        write(fitxerLog,missatgeError,strlen(missatgeError));
         printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
 
-        while(1){
+        do{
             printf("LISTA DE SOCKETS: \n\0");
 
             int LlistarSockets = 0;
@@ -85,8 +121,6 @@ int main(int argc,char *argv[])
                 printf("No ha arribat res \n\0");
             }
             else{
-
-                printf("ELSE,ELSE,ELSE,ELSE,ELSE,ELSE\n\0");
                 int trobat = 0;
                 int i = 0;
                 while(!trobat && i<LongLlistaSck){
@@ -104,6 +138,7 @@ int main(int argc,char *argv[])
                     int socketAccepta = socketAccepta = UEBs_AcceptaConnexio(socket, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError);
                     printf("Socket ser:%d",socketAccepta);
                     if(socketAccepta == -1){
+                        write(fitxerLog,missatgeError,strlen(missatgeError));
                         printf("Error al acceptar connexió\n\0");
                         printf("%s\n",missatgeError);
                     }
@@ -112,55 +147,70 @@ int main(int argc,char *argv[])
                     AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
                 }
                 else if(trobat){
-                    int retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
-                    if(retorn == -3)
-                    {
+                    if(haArribatAlgo==0){ //Toca llegir de teclat
+                        char text[100];
+                        
+                        int escanejat = scanf("%s", text);
+                        if(strcmp(text,"exit")==0){
+                            continuarServidor = FALSE;
+                            char tmp[200] = "S'ha escrit exit per teclat\n\0";
+                            strcpy(missatgeError,tmp);
+                            missatgeError[199] = '\0';
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                            int i = 0;
+                            while(i<LongLlistaSck){
+                                if(LlistaSck[i]!=-1){
+                                    UEBs_TancaConnexio(LlistaSck[i], missatgeError);
+                                    write(fitxerLog,missatgeError,strlen(missatgeError));
+                                }
+                                i++;
+                            }
+                        }
+                        else{
+                            char tmp[200] = "No s'ha escrit exit per teclat\n\0";
+                            strcpy(missatgeError,tmp);
+                            missatgeError[199] = '\0';
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
+                        }
+                    }
+                    else{
+                        int retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
+                    write(fitxerLog,missatgeError,strlen(missatgeError));
+                    if(retorn == -3){
                         printf("Error al servir petició -3\n\0");
-                        printf("%s\n",missatgeError);
-                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
-                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
-                        {
-                            printf("%s\n",missatgeError);
-                        }
                     }
-                    else if(retorn == -2)
-                    {
+                    else if(retorn == -2){
                         printf("Error al servir petició -2\n\0");
-                        printf("%s\n",missatgeError);
-                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
-                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
-                        {
-                            printf("%s\n",missatgeError);
-                        }
                     }
-                    else if(retorn == -4)
-                    {
+                    else if(retorn == -4){
                         printf("Error al servir petició -4\n\0");
+                    }
+                    else if(retorn == -1){
+                        printf("Error al servir petició -1\n\0");
+                        
+                    }
+                    if(retorn <0){ //si hi ha hagut error a serveix peticio, doncs traiem socket
                         printf("%s\n",missatgeError);
                         TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
                         if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
                             printf("%s\n",missatgeError);
                         }
                     }
-                    else if(retorn == -1)
-                    {
-                        printf("Error al servir petició -1\n\0");
-                        printf("%s\n",missatgeError);
-                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
-                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
-                        {
-                            printf("%s\n",missatgeError);
-                        }
                     }
                 }
                 else{
                     printf("No ha arribat ni socket ni algo de la llista, que ha pasat?\n\0");
                 }
             }
-        }
+        }while(continuarServidor);
         UEBs_TancaConnexio(socket, missatgeError);
+        printf("%s\n",missatgeError);
     }
+    close(fitxerLog);
     
     return 0;
 }
