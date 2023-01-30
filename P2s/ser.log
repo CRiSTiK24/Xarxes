@@ -1,6 +1,3 @@
 Exit al crear fitxer log
 Exit al cambiar la arrel del servidor a partir del fitxer de configuració
-EXIT: El socket s'ha pogut crearEXIT: El socket s'ha pogut crearNo s'ha escrit exit per teclat
-No s'ha escrit exit per teclat
-S'ha escrit exit per teclat
-EXIT: S'ha pogut tancar el fitxerEXIT: S'ha pogut tancar el fitxer
+EXIT: El socket s'ha pogut crearEXIT: El socket s'ha pogut crearEXIT: S'ha enviat el missatge Client ha tancat socket

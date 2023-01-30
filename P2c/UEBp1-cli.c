@@ -62,7 +62,7 @@ int main(int argc,char *argv[])
         if(DNSc_ResolDNSaIP(nom_host, IPser, missatgeError)!=0){
             printf("%s\n",missatgeError);
         }
-        if(esquema != "pueb"){
+        if(strcmp(esquema,"pueb")!=0){
             printf("L'esquema no és correcte, cal que sigui pueb\n");
         }
         printf("Esquema: %s\n",esquema);

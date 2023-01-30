@@ -26,17 +26,6 @@
 
 /* Definició de constants, p.e.,                                          */
 
-struct PaquetUEB{
-    int SckEsc;
-    int SckCon;
-    int portTCPser;
-    int portTCPcli;
-    char MisRes[200];
-    char *IPser;
-    char *IPcli;
-    int *portTCPser;
-}
-
 /* #define XYZ       1500                                                 */
 
 /* Declaració de funcions INTERNES que es fan servir en aquest fitxer     */
