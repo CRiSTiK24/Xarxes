@@ -15,12 +15,36 @@
 /* així les funcions seran conegudes en ell.                              */
 /* En termes de capes de l'aplicació, aquest conjunt de funcions          */
 /* EXTERNES formen la interfície de la capa UEB, en la part servidora.    */
+#define MaximSockets 10
+typedef struct Paquet{
+    int SckEsc;
+    int SckCon;
 
-int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes);
-int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli, int *portTCPcli, char *MisRes);
-int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *MisRes);
-int UEBs_TancaConnexio(int SckCon, char *MisRes);
-int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *TextRes);
-int UEBs_TancaConnexio(int SckCon, char *TextRes);
-int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes);
+    char IPser[16];
+    char IPcli[16];
+
+    int portTCPser;
+    int portTCPcli;
+
+    char tipusPeticio[4];
+    char longPeticio[5];
+    char infoPeticio[9999];
+    char NomFitx[10000];
+
+    int LongLlistaSck;
+    int LlistaSck[10]; //quan li ho poso amb el define no va
+
+    char arrelUEB[10000];
+    
+
+    char missatgeError[200];
+} PaquetUEB;
+
+int UEBs_IniciaServ(PaquetUEB paquet);
+int UEBs_AcceptaConnexio(PaquetUEB paquet);
+int UEBs_ServeixPeticio(PaquetUEB paquet);
+int UEBs_TancaConnexio(PaquetUEB paquet);
+int UEBs_HaArribatAlgunaCosa(PaquetUEB paquet);
+int UEBs_TancaConnexio(PaquetUEB paquet);
+int UEBs_ConfiguracioServer(PaquetUEB paquet);
 /* int UEBs_FuncioExterna(arg1, arg2...);                                 */
