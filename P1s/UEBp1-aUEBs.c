@@ -151,14 +151,15 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
     if(err == -1) 
 	{
         char tmp[200] = "ERROR: Interficie socket ha retornat -1\n\0";
+        int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
         retornada = -1;
     }
     else if(err == -2) 
 	{
-        char tmp[200] = "ERROR: El tipus de peticio no es correcte o "
-					 "el tamany del fitxer no es correcte\0";
+        char tmp[200] = "ERROR: El tipus de peticio no es correcte o el tamany del fitxer no es correcte\n\0";
+        int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
         retornada = -2;
@@ -172,7 +173,8 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
     }
     else if(NomFitx[0] != '/') 
 	{
-        char tmp[200] = "ERROR: El nom del fitxer ha de començar per \0";
+        char tmp[200] = "ERROR: El nom del fitxer ha de començar per / \0";
+        int enviament = ConstiEnvMis(SckCon, "ERR\0", tmp, strlen(tmp));
         retornada = -4;
     }
     else 
@@ -199,6 +201,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
         if (stat(path, &informacioFitxer) == -1) 
 		{
             char tmp[200] = "ERROR: El fitxer no existeix\0";
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
             strcpy(MisRes,tmp);
             MisRes[199] = '\0';
             retornada =  1;
@@ -206,6 +209,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
         else if(informacioFitxer.st_size > 9999) 
 		{
             char tmp[200] = "ERROR: El fitxer es massa gran\0";
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
             strcpy(MisRes,tmp);
             MisRes[199] = '\0';
             retornada = -4;
@@ -213,6 +217,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
         else if(informacioFitxer.st_size == 0) 
 		{
             char tmp[200] = "ERROR: El fitxer esta buit\0";
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
             strcpy(MisRes,tmp);
             MisRes[199] = '\0';
             retornada =  -4;
@@ -222,6 +227,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
             if(fdArchiu == -1) {
                 retornada = -4;
                 char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer: \0";
+                int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
@@ -230,6 +236,7 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
 			{
                 retornada = -4;
                 char tmp[200] = "ERROR: No s'ha pogut llegir el fitxer\0";
+                int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
@@ -238,7 +245,8 @@ int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelD
                 int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacioFitxer.st_size);
                 if(enviament == -1) 
 				{
-                    char tmp[200] = "ERROR: a la interficie de sockets\0";
+                    char tmp[200] = "ERROR: a la interficie de sockets al enviar el fitxer\0";
+                    int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
                     strcpy(MisRes,tmp);
                     MisRes[199] = '\0';
                     retornada = -1;
@@ -315,10 +323,11 @@ n'es altre amb capacitat per 200*/
 /*  0 si tot va bé;                                                       */
 /* -1 si no s'ha pogut llegir el fitxer;                       */
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
-int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes){
+int UEBs_ConfiguracioServer(char *arrelUEB, int* portTCPser, char *MisRes){
 
     int llargadaPath = strlen(getcwd(NULL, 0));
     char path[10000];
+    char bufferArchiu[5000];
     memcpy(path, getcwd(NULL, 0), llargadaPath);
     memcpy(path + llargadaPath, "/ser.cfg", 8);
     path[llargadaPath+8] = '\0';
@@ -328,14 +337,14 @@ int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes){
 
     fp = fopen(path, "r"); // open the file in read mode
     if (fp == NULL) {
-        printf("%s", path);
         retornada = -1;
         char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer de configuracio\0";
         strcpy(MisRes,tmp);
         MisRes[199] = '\0';
     }
     else{
-        if(fgets(arrelUEB, 10000, fp) == NULL) { //copiem els 6 primers caractes de fp a arrelUEB, per tant, sobreescrivim la arrel
+        if(fgets(bufferArchiu, 10000, fp) == NULL) { //copiem els 6 primers caractes de fp a arrelUEB, per tant, sobreescrivim la arrel
+        
         retornada = -1;
         char tmp[200] = "ERROR: Al llegir de la configuracio del servidor\0";
         strcpy(MisRes,tmp);
@@ -343,21 +352,52 @@ int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes){
         }
         else{
             char principi[6];
-            memcpy(principi,arrelUEB,6);
+            memcpy(principi,bufferArchiu,6);
             principi[5] = '\0';
             if(strcmp(principi,"Arrel")==0){
+
+                memcpy(arrelUEB,bufferArchiu+5,strlen(bufferArchiu));
+                
+                retornada = 0;
                 char tmp[200] = "EXIT: Al aconseguir arrel\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
             else{
-                printf("%s\n",principi);
                 retornada = -2;
                 char tmp[200] = "ERROR: La primera linea no és \"Arrel\"\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
-            fclose(fp); // close the file
+
+            if(retornada!=0 || fgets(bufferArchiu, 10000, fp) == NULL) { //copiem la segona linea
+            retornada = -1;
+            char tmp[200] = "ERROR: Al llegir de la configuracio del servidor\0";
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
+            }
+            else{
+                char principi[8];
+                memcpy(principi,bufferArchiu,8);
+                principi[7] = '\0';
+                if(strcmp(principi,"portTCP")==0){
+
+                    char port[6];
+                    memcpy(port,bufferArchiu+7,strlen(bufferArchiu));
+                    *portTCPser = atoi(port);
+
+                    char tmp[200] = "EXIT: Al aconseguir port\0";
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
+                }
+                else{
+                    retornada = -2;
+                    char tmp[200] = "ERROR: La primera linea no és \"portTCP\"\0";
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
+                }
+                fclose(fp); // close the file
+            }
         }
     }
     return retornada;

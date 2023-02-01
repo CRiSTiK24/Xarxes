@@ -62,7 +62,7 @@ int main(int argc,char *argv[])
         write(fitxerLog,exit,strlen(exit));
     }
 
-    int arrelDiferent = UEBs_ConfiguracioServer(arrelUEB, missatgeError);
+    int arrelDiferent = UEBs_ConfiguracioServer(arrelUEB, &portTCPser, missatgeError);
     if(arrelDiferent!=0){
         //printf("Error al llegir la configuració\n\0");
         printf("%s\n",missatgeError);
@@ -90,6 +90,7 @@ int main(int argc,char *argv[])
         }
         else 
 		{
+        printf("Tractant conexió del client amb ip %s amb port %i mediant el port servidor %i \n",IPcli,portTCPcli,portTCPser);
         write(fitxerLog,missatgeError,strlen(missatgeError));
                 do{
                     retorn = UEBs_ServeixPeticio(socketConnexio, tipusPeticio, nomFitx, missatgeError);

@@ -1,4 +1,3 @@
 Exit al crear fitxer log
 Exit al cambiar la arrel del servidor a partir del fitxer de configuració
-EXIT: El socket s'ha pogut crearEXIT: S'ha pogut acceptar la conexio entre el Socket local amb Ip remotaEXIT: S'ha enviat el missatge EXIT: S'ha enviat el missatge EXIT: S'ha pogut acceptar la conexio entre el Socket local amb Ip remotaEXIT: S'ha enviat el missatge ERROR: El fitxer no existeixClient ha tancat socket
-EXIT: S'ha pogut acceptar la conexio entre el Socket local amb Ip remotaEXIT: S'ha enviat el missatge EXIT: S'ha enviat el missatge 
+EXIT: El socket s'ha pogut crearEXIT: S'ha pogut acceptar la conexio entre el Socket local amb Ip remotaEXIT: S'ha enviat el missatge Client ha tancat socket

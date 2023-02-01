@@ -21,4 +21,4 @@ int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli, 
 int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx, char *MisRes);
 int UEBs_TancaConnexio(int SckCon, char *MisRes);
 /* int UEBs_FuncioExterna(arg1, arg2...);                                 */
-int UEBs_ConfiguracioServer(char *arrelUEB, char *MisRes);
+int UEBs_ConfiguracioServer(char *arrelUEB, int *portTCPser, char *MisRes);
