@@ -140,14 +140,25 @@ int UEBc_ObteFitxer(int SckCon, const char *NomFitx, char *Fitx, int *LongFitx,
         else 
 		{
             char tipus[4];
-            if(RepiDesconstMis(SckCon, tipus, Fitx, LongFitx) == -1) 
+            int respostaRepiDesconstMis = RepiDesconstMis(SckCon, tipus, Fitx, LongFitx);
+            if(respostaRepiDesconstMis == -1)
 			{
                 retornada = -1;
-                char tmp[200] = "ERROR: No s'ha pogut rebre i desconstruir el missatge\n\0";
+                char tmp[200] = "ERROR: a la interfície de sockets al rebre i desconstruir el missatge\n\0";
                 strcpy(MisRes,tmp);
                 MisRes[199] = '\0';
             }
-            else{
+            else if(respostaRepiDesconstMis == -2){
+                retornada = -2;
+                char tmp[200] = "ERROR: protocol és incorrecte (nomFitxer, longitud camps, tipus de peticio) al rebre i desconstruir el missatge\n\0";
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
+            }
+            else if(respostaRepiDesconstMis == -3){
+                retornada = -3;
+                char tmp[200] = "ERROR: l'altra part tanca la connexió al rebre i desconstruir el missatge\n\0";
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
             }
         }
     }
@@ -267,7 +278,7 @@ int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
         memcpy(tipus, buffer, 3);
         tipus[3] = '\0';
-        if(strcmp(tipus,"COR")!=0 && strcmp(tipus,"ERR")!=0){
+        if(strcmp(tipus,"COR")!=0){// && strcmp(tipus,"ERR")!=0 ; ara si és ERR, es retorna -2
             retornada = -2;
         }
         else 

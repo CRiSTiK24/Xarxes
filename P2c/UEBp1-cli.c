@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include <fcntl.h> 
 
 /* Definició de constants, p.e.,                                          */
 
@@ -36,12 +39,9 @@ int main(int argc,char *argv[])
 	/* Declaració de variables, p.e., int n;                              */
     int socket;
     char missatgeError[200];
-    char IPser[16]; //= "10.100.100.101\0"; // TODO: fer que es llegeixi de teclat
-    //int portTCPser = 45456;
+    char IPser[16];
     char IPcli[16] = "10.100.100.102\0";
-    int portTCPcli = 0; // despres farem que es llegeixi de fitxer
-    //char tiposPeticio[4] = "OBT\0";
-    //char nomFitx[10000] = "/llocUEB/primera.html\0"; //TODO: fer que es llegeixi de teclat
+    int portTCPcli = 0;
     char fitxer[10000];
     int longFitx = 0;
 
@@ -53,7 +53,7 @@ int main(int argc,char *argv[])
 	 
 	/* Es demana un URI */
 	printf("Entra la URL del que vols obtenir amb format protocol://nomDNS:port/nomFitxer\n");
-    printf("per exemple, pueb://PC-a:45456/ser.cfg: ");
+    printf("per exemple, pueb://PC-a:45456/llocUEB/primera.html: ");
 	int escanejat = scanf("%s", uri);
 	
     while(scanf != 0){ //finalitzem quan el usuari no posi res al scanf
@@ -62,7 +62,7 @@ int main(int argc,char *argv[])
         if(DNSc_ResolDNSaIP(nom_host, IPser, missatgeError)!=0){
             printf("%s\n",missatgeError);
         }
-        if(esquema != "pueb"){
+        if(strcmp(esquema,"pueb")!=0){
             printf("L'esquema no és correcte, cal que sigui pueb\n");
         }
         printf("Esquema: %s\n",esquema);
@@ -70,6 +70,22 @@ int main(int argc,char *argv[])
         printf("IPservidor: %s\n",IPser);
         printf("PORTservidor: %d\n",portTCPser);
         printf("NomFitxer: %s\n",nomFitx);
+
+        char path[2000];
+        int llargadaPath = strlen(getcwd(NULL, 0));
+        memcpy(path, getcwd(NULL, 0), llargadaPath);
+        memcpy(path + llargadaPath, nomFitx, strlen(nomFitx));
+        path[llargadaPath+ strlen(nomFitx)] = '\0';
+
+        int fitxerSortida = open(path, O_CREAT| O_WRONLY | O_TRUNC);
+        if(fitxerSortida < 0){
+            printf("Error al crear fitxer sortida amb: %s\n",path);
+        }
+        else{
+            char exit[100] = "Exit al crear fitxer on escriuriem el rebut\n\0";
+        }
+
+        portTCPcli = 0; //Perque es faci servir un port aleatori, ja que si no, només va el primer cop ja que es guarda el port anterior i intenta usar-lo un altre cop, quan ja esta en us
 
         socket = UEBc_DemanaConnexio(IPser, portTCPser, IPcli, &portTCPcli, missatgeError);
 
@@ -82,30 +98,27 @@ int main(int argc,char *argv[])
         {
             conexioActiva = 1;
             int estatusFitxer = UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError);
-            while (estatusFitxer != -3)
-            {
-                if(estatusFitxer == -1)
-                {
-                    printf("%s\n",missatgeError);
-                }
-                else{
-                    printf("%s\n",fitxer);
-                    printf("Insereix el nom del fitxer que vols obtenir,per exemple, /ser.cfg: ");
-                    escanejat = scanf("%s", nomFitx);
-                    int estatusFitxer = UEBc_ObteFitxer(socket,nomFitx,fitxer,&longFitx,missatgeError);
-                }
-            }
-        }
-        printf("El servidor ha tancat conexió: \n");
-        if(conexioActiva == 1){
-            if(UEBc_TancaConnexio(socket,missatgeError) == -1)
+            if(estatusFitxer < 0 || estatusFitxer == 1)
             {
                 printf("%s\n",missatgeError);
             }
+            else{
+                    write(fitxerSortida, fitxer, longFitx);
+                    printf("Fitxer rebut exitosament\n"); 
+                    close(fitxerSortida);
+                }
         }
+        printf("Esperant 10 sec: \n");
+        sleep(10);
+        printf("Tancant conexió: \n");
+        if(UEBc_TancaConnexio(socket,missatgeError) == -1){
+                printf("%s\n",missatgeError);
+        }
+
         printf("\n");
-        printf("URI: ");
-        escanejat = scanf("%s", uri);
+        printf("Entra la URL del que vols obtenir amb format protocol://nomDNS:port/nomFitxer\n");
+        printf("per exemple, pueb://PC-a:45456/llocUEB/primera.html: ");
+	    int escanejat = scanf("%s", uri);
     }
     return 0;
 }

@@ -15,7 +15,6 @@
 /*   un #include del propi fitxer capçalera)                              */
 
 #include "UEBp1-tTCP.h"
-#include "UEBp1-aUEBs.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,7 +26,6 @@
 
 /* Definició de constants, p.e.,                                          */
 
-
 /* #define XYZ       1500                                                 */
 
 /* Declaració de funcions INTERNES que es fan servir en aquest fitxer     */
@@ -36,8 +34,8 @@
 
 /* int FuncioInterna(arg1, arg2...);                                      */
 
-int ConstiEnvMis(PaquetUEB paquet);
-int RepiDesconstMis(PaquetUEB paquet);
+int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1);
+int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1);
 
 /* Definició de funcions EXTERNES, és a dir, d'aquelles que es cridaran   */
 /* des d'altres fitxers, p.e., int UEBs_FuncioExterna(arg1, arg2...) { }  */
@@ -55,27 +53,27 @@ int RepiDesconstMis(PaquetUEB paquet);
 /* Retorna:                                                               */
 /*  0 si tot va bé;                                                       */
 /* -1 si hi ha un error en la interfície de sockets.                      */
-int UEBs_IniciaServ(PaquetUEB paquet)
+int UEBs_IniciaServ(int *SckEsc, int portTCPser, char *MisRes)
 {
     const char IPloc[16] = "0.0.0.0\0";
-    if(paquet.portTCPser == 0) 
+    if(portTCPser == 0) 
 	{
-		paquet.portTCPser = 3000;
+		portTCPser = 3000;
 	}		
-	paquet.SckEsc = TCP_CreaSockServidor(IPloc, paquet.portTCPser);
-    if(paquet.SckEsc == -1) 
+	*SckEsc = TCP_CreaSockServidor(IPloc, portTCPser);
+    if(*SckEsc == -1) 
 	{
         char tmp[200] = "ERROR: El socket ip no s'ha pogut crear\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         return -1;
     }
     else 
 	{
         char tmp[200] = "EXIT: El socket s'ha pogut crear\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
-        return paquet.SckEsc;
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
+        return *SckEsc;
     }
 }
 
@@ -94,28 +92,28 @@ int UEBs_IniciaServ(PaquetUEB paquet)
 /* Retorna:                                                               */
 /*  l'identificador del socket TCP connectat si tot va bé;                */
 /* -1 si hi ha un error a la interfície de sockets.                       */
-int UEBs_AcceptaConnexio(PaquetUEB paquet)
+int UEBs_AcceptaConnexio(int SckEsc, char *IPser, int *portTCPser, char *IPcli,
+						 int *portTCPcli, char *MisRes)
 {
     int retornada;
-    retornada = TCP_AcceptaConnexio(paquet.SckEsc, paquet.IPcli, paquet.portTCPcli&);
-    if(retornada == -1)
+    if((retornada = TCP_AcceptaConnexio(SckEsc, IPcli, portTCPcli)) == -1)
     {
         char tmp[200] = "ERROR: No s'ha pogut acceptar la conexio "
                         "entre el Socket local amb IP remota\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         retornada = -1;
     }
     else {
         char tmp[200] = "EXIT: S'ha pogut acceptar la conexio "
                         "entre el Socket local amb Ip remota\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
 
-        if (TCP_TrobaAdrSockLoc(paquet.SckEsc, paquet.IPser, paquet.portTCPser&) == -1) {
+        if (TCP_TrobaAdrSockLoc(SckEsc, IPser, portTCPser) == -1) {
             char tmp[200] = "ERROR: No s'ha treure les ip i ports del socket\0";
-            strcpy(paquet.missatgeError,tmp);
-            paquet.missatgeError[199] = '\0';
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
             retornada = -1;
         }
     }
@@ -142,79 +140,86 @@ int UEBs_AcceptaConnexio(PaquetUEB paquet)
 /* -3 si l'altra part tanca la connexió;                                  */
 /* -4 si hi ha problemes amb el fitxer de la petició (p.e., nomfitxer no  */
 /*  comença per /, fitxer no es pot llegir, fitxer massa gran, etc.).     */
-int UEBs_ServeixPeticio(PaquetUEB paquet)
+int UEBs_ServeixPeticio(int SckCon, char *TipusPeticio, char *NomFitx,int arrelDiferent,char *arrelUEB, char *MisRes)
 {
     char path[10000];
     int retornada = 0;
     int tamanyFitxer;
 
-    int err = RepiDesconstMis(paquet);
+    int err = RepiDesconstMis(SckCon, TipusPeticio, NomFitx, &tamanyFitxer);
 
     if(err == -1) 
 	{
         char tmp[200] = "ERROR: Interficie socket ha retornat -1\n\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         retornada = -1;
     }
     else if(err == -2) 
 	{
-        char tmp[200] = "ERROR: El tipus de peticio no es correcte o "
-					 "el tamany del fitxer no es correcte\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        char tmp[200] = "ERROR: El tipus de peticio no es correcte o el tamany del fitxer no es correcte\n\0";
+        int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         retornada = -2;
     }
     else if(err == -3) 
 	{
         char tmp[200] = "Client ha tancat socket\n\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         retornada = -2;
     }
-    else if(paquet.NomFitx[0] != '/') 
+    else if(NomFitx[0] != '/') 
 	{
-        char tmp[200] = "ERROR: El nom del fitxer ha de començar per \0";
+        char tmp[200] = "ERROR: El nom del fitxer ha de començar per / \0";
+        int enviament = ConstiEnvMis(SckCon, "ERR\0", tmp, strlen(tmp));
         retornada = -4;
     }
     else 
 	{
-        if(paquet.arrelUEB==NULL){
+        if(arrelDiferent!=0){
         int llargadaPath = strlen(getcwd(NULL, 0));
+
+        
 
         memcpy(path, getcwd(NULL, 0), llargadaPath);
 
-        memcpy(path + llargadaPath, paquet.NomFitx, tamanyFitxer);
+        memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
         path[llargadaPath+tamanyFitxer] = '\0';
         }
         else{
-            int llargadaPath = strlen(paquet.arrelUEB);
+            int llargadaPath = strlen(arrelUEB);
 
-            memcpy(path, paquet.arrelUEB, llargadaPath);
+            memcpy(path, arrelUEB, llargadaPath);
 
-            memcpy(path + llargadaPath, paquet.NomFitx, tamanyFitxer);
+            memcpy(path + llargadaPath, NomFitx, tamanyFitxer);
             path[llargadaPath+tamanyFitxer] = '\0';
         }
         struct stat informacioFitxer;
         if (stat(path, &informacioFitxer) == -1) 
 		{
             char tmp[200] = "ERROR: El fitxer no existeix\0";
-            strcpy(paquet.missatgeError,tmp);
-            paquet.missatgeError[199] = '\0';
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
             retornada =  1;
         }
         else if(informacioFitxer.st_size > 9999) 
 		{
             char tmp[200] = "ERROR: El fitxer es massa gran\0";
-            strcpy(paquet.missatgeError,tmp);
-            paquet.missatgeError[199] = '\0';
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
             retornada = -4;
         }
         else if(informacioFitxer.st_size == 0) 
 		{
             char tmp[200] = "ERROR: El fitxer esta buit\0";
-            strcpy(paquet.missatgeError,tmp);
-            paquet.missatgeError[199] = '\0';
+            int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
             retornada =  -4;
         }
         else {
@@ -222,36 +227,35 @@ int UEBs_ServeixPeticio(PaquetUEB paquet)
             if(fdArchiu == -1) {
                 retornada = -4;
                 char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer: \0";
-                strcpy(paquet.missatgeError,tmp);
-                paquet.missatgeError[199] = '\0';
+                int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
             }
             char bufferArchiu[9999];
             if(read(fdArchiu, bufferArchiu, 9999) == -1) 
 			{
                 retornada = -4;
                 char tmp[200] = "ERROR: No s'ha pogut llegir el fitxer\0";
-                strcpy(paquet.missatgeError,tmp);
-                paquet.missatgeError[199] = '\0';
+                int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
             }
             else 
 			{
-                memcpy(paquet.tipusPeticio, "COR", 3);
-                paquet.tipusPeticio[3] = '\0';
-                memcpy(paquet.longPeticio, informacioFitxer.st_size, 4);
-                paquet.longPeticio[4] = '\0';
-                int enviament = ConstiEnvMis(paquet);
+                int enviament = ConstiEnvMis(SckCon, "COR\0", bufferArchiu, informacioFitxer.st_size);
                 if(enviament == -1) 
 				{
-                    char tmp[200] = "ERROR: a la interficie de sockets\0";
-                    strcpy(paquet.missatgeError,tmp);
-                    paquet.missatgeError[199] = '\0';
+                    char tmp[200] = "ERROR: a la interficie de sockets al enviar el fitxer\0";
+                    int enviament = ConstiEnvMis(SckCon, "ERR", tmp, strlen(tmp));
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
                     retornada = -1;
                 }
                 else 
 				{
                     char tmp[200] = "EXIT: S'ha enviat el missatge \0";
-                    strcpy(paquet.missatgeError,tmp);
-                    paquet.missatgeError[199] = '\0';
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
                 }
             }
 
@@ -261,7 +265,7 @@ int UEBs_ServeixPeticio(PaquetUEB paquet)
 
 }
 
-/* Tanca la connexió TCP d'identificador "SckEsc".                        */
+/* Tanca la connexió TCP d'identificador "SckCon".                        */
 /* Escriu un missatge que descriu el resultat de la funció a "MisRes".    */
 /*                                                                        */
 /* "MisRes" és un "string" de C (vector de chars imprimibles acabat en    */
@@ -270,21 +274,21 @@ int UEBs_ServeixPeticio(PaquetUEB paquet)
 /* Retorna:                                                               */
 /*   0 si tot va bé;                                                      */
 /*  -1 si hi ha un error a la interfície de sockets.                      */
-int UEBs_TancaConnexio(PaquetUEB paquet)
+int UEBs_TancaConnexio(int SckCon, char *MisRes)
 {
     int retornada = 0;
-    if(TCP_TancaSock(paquet.SckEsc) == -1)
+    if(TCP_TancaSock(SckCon) == -1) 
 	{
         retornada = -1;
         char tmp[200] = "ERROR: No s'ha pogut tancar el fitxer\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
     }
     else 
 	{
         char tmp[200] = "EXIT: S'ha pogut tancar el fitxer\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
     }
     return retornada;
 }
@@ -319,10 +323,11 @@ n'es altre amb capacitat per 200*/
 /*  0 si tot va bé;                                                       */
 /* -1 si no s'ha pogut llegir el fitxer;                       */
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
-int UEBs_ConfiguracioServer(PaquetUEB paquet){
+int UEBs_ConfiguracioServer(char *arrelUEB, int* portTCPser, char *MisRes){
 
     int llargadaPath = strlen(getcwd(NULL, 0));
     char path[10000];
+    char bufferArchiu[5000];
     memcpy(path, getcwd(NULL, 0), llargadaPath);
     memcpy(path + llargadaPath, "/ser.cfg", 8);
     path[llargadaPath+8] = '\0';
@@ -335,33 +340,62 @@ int UEBs_ConfiguracioServer(PaquetUEB paquet){
         printf("%s", path);
         retornada = -1;
         char tmp[200] = "ERROR: No s'ha pogut obrir el fitxer de configuracio\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
     }
     else{
-        if(fgets(paquet.arrelUEB, 10000, fp) == NULL) { //copiem els 6 primers caractes de fp a arrelUEB, per tant, sobreescrivim la arrel
+        if(fgets(bufferArchiu, 10000, fp) == NULL) { //copiem els 6 primers caractes de fp a arrelUEB, per tant, sobreescrivim la arrel
         retornada = -1;
         char tmp[200] = "ERROR: Al llegir de la configuracio del servidor\0";
-        strcpy(paquet.missatgeError,tmp);
-        paquet.missatgeError[199] = '\0';
+        strcpy(MisRes,tmp);
+        MisRes[199] = '\0';
         }
         else{
             char principi[6];
-            memcpy(principi,paquet.arrelUEB,6);
+            memcpy(principi,bufferArchiu,6);
             principi[5] = '\0';
             if(strcmp(principi,"Arrel")==0){
+                memcpy(arrelUEB,bufferArchiu+5,strlen(bufferArchiu));
+                retornada = 0;
                 char tmp[200] = "EXIT: Al aconseguir arrel\0";
-                strcpy(paquet.missatgeError,tmp);
-                paquet.missatgeError[199] = '\0';
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
             }
             else{
                 printf("%s\n",principi);
                 retornada = -2;
                 char tmp[200] = "ERROR: La primera linea no és \"Arrel\"\0";
-                strcpy(paquet.missatgeError,tmp);
-                paquet.missatgeError[199] = '\0';
+                strcpy(MisRes,tmp);
+                MisRes[199] = '\0';
             }
-            fclose(fp); // close the file
+            if(retornada!=0 || fgets(bufferArchiu, 10000, fp) == NULL) { //copiem la segona linea
+            retornada = -1;
+            char tmp[200] = "ERROR: Al llegir de la configuracio del servidor\0";
+            strcpy(MisRes,tmp);
+            MisRes[199] = '\0';
+            }
+            else{
+                char principi[8];
+                memcpy(principi,bufferArchiu,8);
+                principi[7] = '\0';
+                if(strcmp(principi,"portTCP")==0){
+
+                    char port[6];
+                    memcpy(port,bufferArchiu+7,strlen(bufferArchiu));
+                    *portTCPser = atoi(port);
+
+                    char tmp[200] = "EXIT: Al aconseguir port\0";
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
+                }
+                else{
+                    retornada = -2;
+                    char tmp[200] = "ERROR: La primera linea no és \"portTCP\"\0";
+                    strcpy(MisRes,tmp);
+                    MisRes[199] = '\0';
+                }
+                fclose(fp); // close the file
+            }
         }
     }
     return retornada;
@@ -380,17 +414,17 @@ int UEBs_ConfiguracioServer(PaquetUEB paquet){
 /*  0 si tot va bé;                                                       */
 /* -1 si hi ha un error a la interfície de sockets;                       */
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio).       */
-int ConstiEnvMis(PaquetUEB paquet)
+int ConstiEnvMis(int SckCon, const char *tipus, const char *info1, int long1)
 {
     int retornada = 0;
-	char buffer[17+atoi(paquet.longPeticio)];
-    memcpy(buffer, paquet.tipusPeticio, 3);
+	char buffer[17+long1];
+    memcpy(buffer, tipus, 3);
     char charLong[4];
-    sprintf(charLong,"%.4d",atoi(paquet.longPeticio));
+    sprintf(charLong,"%.4d",long1);
     //charLong[4] = "\0"; //TODO: 222:17 makes integer from pointer without a cast
     memcpy(buffer+3, charLong, 4);
-    memcpy(buffer+7, paquet.infoPeticio, paquet.longPeticio);
-    if(TCP_Envia(paquet.SckCon, buffer, 7 + paquet.longPeticio) == -1) 
+    memcpy(buffer+7, info1, long1);
+    if(TCP_Envia(SckCon, buffer, 7 + long1) == -1) 
 	{
         retornada = -1;
     }
@@ -412,14 +446,14 @@ int ConstiEnvMis(PaquetUEB paquet)
 /* -1 si hi ha un error a la interfície de sockets;                       */
 /* -2 si protocol és incorrecte (longitud camps, tipus de peticio);       */
 /* -3 si l'altra part tanca la connexió.                                  */
-int RepiDesconstMis(PaquetUEB paquet)
+int RepiDesconstMis(int SckCon, char *tipus, char *info1, int *long1)
 {
     int retornada = 0;
 	char buffer[10006];
     // Llegeix el missatge del socket
 	//!TODO mirar si TCP_Rep ha llegit menys de 7 bytes i per tant hi ha perrill de segfault
 
-    int read = TCP_Rep(paquet.SckCon, buffer, 10006);
+    int read = TCP_Rep(SckCon, buffer, 10006);
 
     if(read == -1) 
 	{
@@ -431,10 +465,10 @@ int RepiDesconstMis(PaquetUEB paquet)
     else 
 	{
 		/* Guarda a tipus una substring del buffer del char 0 al 2 		  */
-        memcpy(paquet.tipusPeticio, buffer, 3);
-        paquet.tipusPeticio[3] = '\0';
+        memcpy(tipus, buffer, 3);
+        tipus[3] = '\0';
 
-        if(strcmp(paquet.tipusPeticio,"OBT")!=0)
+        if(strcmp(tipus,"OBT")!=0)
 		{
             retornada = -2;
         }
@@ -444,14 +478,13 @@ int RepiDesconstMis(PaquetUEB paquet)
 			/* char 3 al 7 del buffer								      */
             char tamanyFitxer[4];
             memcpy(tamanyFitxer, buffer+3, 4);
-            tamanyFitxer[4] = '\0';
 
-            memcpy(paquet.longPeticio, tamanyFitxer, 4);
-            paquet.longPeticio[4] = '\0';
+			/* Converteix tamanyFitxer a un enter 						  */
+            *long1 = atoi(tamanyFitxer);
             /* Llegeix els caràcters de tamanyFitxer del buffer i els 	  */
 			/* guarda a NomFitx 										  */
 
-            memcpy(paquet.infoPeticio, buffer+7, atoi(paquet.longPeticio));
+            memcpy(info1, buffer+7, *long1);
 
 
         }
@@ -474,18 +507,18 @@ int RepiDesconstMis(PaquetUEB paquet)
 /* Retorna:                                                               */
 /*  l'identificador del socket a través del qual ha arribat alguna cosa;  */
 /*  -1 si hi ha error.                                                    */
-int UEBs_HaArribatAlgunaCosa(PaquetUEB paquet)
+int UEBs_HaArribatAlgunaCosa(const int *LlistaSck, int LongLlistaSck, char *TextRes)
 {
     int retornada = 0;
-	retornada = TCP_HaArribatAlgunaCosaEnTemps(paquet.LlistaSck, paquet.LongLlistaSck, -1);
+	retornada = TCP_HaArribatAlgunaCosaEnTemps(LlistaSck, LongLlistaSck, -1);
     if(retornada == -1)
 	{
-		char tmp[200] = "TCP Ha arribat alguna cosa ha retornat %i \0",retornada;
-        strncpy(paquet.missatgeError, tmp, strlen(tmp));
-        paquet.missatgeError[sizeof paquet.missatgeError - 1] = '\0';
+		char tmp[200] = " \0";
+        strncpy(TextRes, tmp, strlen(tmp));
+        TextRes[sizeof TextRes - 1] = '\0';
 	}
 	char tmp[200] = " \0";
-    strncpy(paquet.missatgeError, tmp, strlen(tmp));
-    missatgeError[sizeof missatgeError - 1] = '\0';
+    strncpy(TextRes, tmp, strlen(tmp));
+    TextRes[sizeof TextRes - 1] = '\0';
 	return retornada;
 }

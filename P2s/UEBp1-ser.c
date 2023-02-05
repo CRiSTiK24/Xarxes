@@ -42,17 +42,20 @@ int TreuSck(int Sck, int *LlistaSck, int LongLlistaSck);
 
 int main(int argc,char *argv[])
 {
- /* Declaració de variables, p.e., int n;                                */
+ /* Declaració de variables, p.e    int socket;*/
+    int socketConnexio;
+    char missatgeError[200];
+    char IPser[16] = "10.100.100.101\0";
+    int portTCPser = 45456;
+    char IPcli[16];
+    int portTCPcli;
+    char tipusPeticio[4];
+    char nomFitx[10000];
+    const int LongLlistaSck = 10;
+    int LlistaSck[LongLlistaSck];
     char path[10000]; 
     char arrelUEB[10000];
     int continuarServidor = TRUE;
-
-   struct PaquetUEB paquet;
-   paquet.IPser[16] = "10.100.100.101\0";
-   paquet.portTCPser = 45456;
-   paquet.LongLlistaSck = 10;
-   paquet.arrelUEB = 0;
-
 
 
     memcpy(path,getcwd(NULL, 0),strlen(getcwd(NULL, 0)));
@@ -68,11 +71,10 @@ int main(int argc,char *argv[])
         write(fitxerLog,exit,strlen(exit));
     }
 
-    int arrelDiferent = UEBs_ConfiguracioServer(paquet);
+    int arrelDiferent = UEBs_ConfiguracioServer(arrelUEB, &portTCPser, missatgeError);
     if(arrelDiferent!=0){
-        paquet.arrelUEB = NULL;
         //printf("Error al llegir la configuració\n\0");
-        printf("%s\n",paquet.missatgeError);
+        printf("%s\n",missatgeError);
     }
     else{
         char exit[100] = "Exit al cambiar la arrel del servidor a partir del fitxer de configuració\n\0";
@@ -80,39 +82,39 @@ int main(int argc,char *argv[])
     }
 
     int InicialitzadorSockets = 0;
-    while(InicialitzadorSockets<paquet.LongLlistaSck){
-        paquet.LlistaSck[InicialitzadorSockets] = -1;
+    while(InicialitzadorSockets<LongLlistaSck){
+        LlistaSck[InicialitzadorSockets] = -1;
         InicialitzadorSockets++;
     }
     
 
 	/* Expressions, estructures de control, crides a funcions, etc.       */
-    if(UEBs_IniciaServ(paquet) == -1)
+    if(UEBs_IniciaServ(&socketConnexio, portTCPser, missatgeError) == -1)
 	{
-        printf("%s\n",paquet.missatgeError);
-        write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
+        printf("%s\n",missatgeError);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
     }
     else 
 	{
-        AfegeixSck(paquet.SckEsc, paquet.LlistaSck,paquet.LongLlistaSck);
-        write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
-        AfegeixSck(0, paquet.LlistaSck,paquet.LongLlistaSck); //afegim el teclat a la llista
-        write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
-        printf("La ip del servidor és %s i el port %d\n",paquet.IPser,paquet.portTCPser);
+        AfegeixSck(socketConnexio, LlistaSck,LongLlistaSck);
+        write(fitxerLog,missatgeError,strlen(missatgeError));
+        AfegeixSck(0, LlistaSck,LongLlistaSck); //afegim el teclat a la llista
+        write(fitxerLog,missatgeError,strlen(missatgeError));
+        printf("La ip del servidor és %s i el port %d\n",IPser,portTCPser);
 
         do{
             printf("LISTA DE SOCKETS: \n\0");
 
             int LlistarSockets = 0;
-            while(LlistarSockets<paquet.LongLlistaSck){
-                printf("LlistaSck[%d] = %d\n\0", LlistarSockets, paquet.LlistaSck[LlistarSockets]);
+            while(LlistarSockets<LongLlistaSck){
+                printf("LlistaSck[%d] = %d\n\0", LlistarSockets, LlistaSck[LlistarSockets]);
                 LlistarSockets++;
             }
-            int haArribatAlgo = UEBs_HaArribatAlgunaCosa(paquet);
+            int haArribatAlgo = UEBs_HaArribatAlgunaCosa(LlistaSck,LongLlistaSck, missatgeError);
             printf("Ha arribat alguna cosa: %d\n\0", haArribatAlgo);
             if(haArribatAlgo == -1){
                 printf("Error: Error al Ha Arribat Alguna Cosa\n\0");
-                printf("%s\n",paquet.missatgeError);
+                printf("%s\n",missatgeError);
             }
             else if(haArribatAlgo==-2){
                 printf("No ha arribat res \n\0");
@@ -120,28 +122,24 @@ int main(int argc,char *argv[])
             else{
                 int trobat = 0;
                 int i = 0;
-                while(!trobat && i<paquet.LongLlistaSck){
-                    if(paquet.LlistaSck[i]==haArribatAlgo){
+                while(!trobat && i<LongLlistaSck){
+                    if(LlistaSck[i]==haArribatAlgo){
                         trobat = 1;
                     }
                     else{
                         i++;
                     }
                 }
-                printf("L'hem trobat o no? %d\n\0", trobat);
-                printf("socket: %d\n\0", paquet.SckEsc);
-                if(paquet.SckEsc == haArribatAlgo){
+                if(socketConnexio == haArribatAlgo){
                     printf("Ha arribat una nova connexió\n\0");
-                    int socketAccepta = socketAccepta = UEBs_AcceptaConnexio(paquet);
-                    printf("Socket ser:%d",socketAccepta);
+                    int socketAccepta = socketAccepta = UEBs_AcceptaConnexio(socketConnexio, IPser, &portTCPser, IPcli, &portTCPcli, missatgeError);
                     if(socketAccepta == -1){
-                        write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
+                        write(fitxerLog,missatgeError,strlen(missatgeError));
                         printf("Error al acceptar connexió\n\0");
-                        printf("%s\n",paquet.missatgeError);
+                        printf("%s\n",missatgeError);
                     }
-                    printf("La ip del client és %s i el port %d\n",paquet.IPcli,paquet.portTCPcli);
                     printf("El socket de la connexió és %d\n",socketAccepta);
-                    AfegeixSck(socketAccepta, paquet.LlistaSck ,paquet.LongLlistaSck);
+                    AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
                 }
                 else if(trobat){
                     if(haArribatAlgo==0){ //Toca llegir de teclat
@@ -151,30 +149,31 @@ int main(int argc,char *argv[])
                         if(strcmp(text,"exit")==0){
                             continuarServidor = FALSE;
                             char tmp[200] = "S'ha escrit exit per teclat\n\0";
-                            strcpy(paquet.missatgeError,tmp);
-                            paquet.missatgeError[199] = '\0';
-                            write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
-                            printf("%s\n",paquet.missatgeError);
+                            strcpy(missatgeError,tmp);
+                            missatgeError[199] = '\0';
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
                             int i = 0;
-                            while(i<paquet.LongLlistaSck){
-                                if(paquet.LlistaSck[i]!=-1){
-                                    UEBs_TancaConnexio(paquet);
-                                    write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
+                            while(i<LongLlistaSck){
+                                if(LlistaSck[i]!=-1){
+                                    UEBs_TancaConnexio(LlistaSck[i], missatgeError);
+                                    write(fitxerLog,missatgeError,strlen(missatgeError));
                                 }
                                 i++;
                             }
                         }
                         else{
                             char tmp[200] = "No s'ha escrit exit per teclat\n\0";
-                            strcpy(paquet.missatgeError,tmp);
-                            paquet.missatgeError[199] = '\0';
-                            write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
-                            printf("%s\n",paquet.missatgeError);
+                            strcpy(missatgeError,tmp);
+                            missatgeError[199] = '\0';
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
                         }
                     }
                     else{
-                        int retorn = UEBs_ServeixPeticio(paquet);
-                    write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
+                        
+                        int retorn = UEBs_ServeixPeticio(haArribatAlgo, tipusPeticio, nomFitx, missatgeError);
+                    write(fitxerLog,missatgeError,strlen(missatgeError));
                     if(retorn == -3){
                         printf("Error al servir petició -3\n\0");
                     }
@@ -186,15 +185,14 @@ int main(int argc,char *argv[])
                     }
                     else if(retorn == -1){
                         printf("Error al servir petició -1\n\0");
-                        
                     }
                     if(retorn <0){ //si hi ha hagut error a serveix peticio, doncs traiem socket
-                        printf("%s\n",paquet.missatgeError);
-                        TreuSck(haArribatAlgo, paquet.LlistaSck ,paquet.LongLlistaSck);
-                        if(UEBs_TancaConnexio(paquet) == -1)
+                        printf("%s\n",missatgeError);
+                        TreuSck(haArribatAlgo, LlistaSck ,LongLlistaSck);
+                        if(UEBs_TancaConnexio(haArribatAlgo, missatgeError) == -1)
                         {
-                            write(fitxerLog,paquet.missatgeError,strlen(paquet.missatgeError));
-                            printf("%s\n",paquet.missatgeError);
+                            write(fitxerLog,missatgeError,strlen(missatgeError));
+                            printf("%s\n",missatgeError);
                         }
                     }
                     }
@@ -203,12 +201,12 @@ int main(int argc,char *argv[])
                     printf("No ha arribat ni socket ni algo de la llista, que ha pasat?\n\0");
                 }
             }
-        }while(continuarServidor);
-        UEBs_TancaConnexio(paquet);
-        printf("%s\n",paquet.missatgeError);
+        }while (continuarServidor);
+        
+        UEBs_TancaConnexio(socketConnexio, missatgeError);
+        printf("%s\n",missatgeError);
     }
     close(fitxerLog);
-    
     return 0;
 }
 
