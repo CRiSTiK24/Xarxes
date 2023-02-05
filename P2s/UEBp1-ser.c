@@ -139,7 +139,10 @@ int main(int argc,char *argv[])
                         printf("%s\n",missatgeError);
                     }
                     printf("El socket de la connexió és %d\n",socketAccepta);
-                    AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck);
+                    if(AfegeixSck(socketAccepta, LlistaSck ,LongLlistaSck) == -1){
+                        printf("Llista de sockets plena, no podem affegir-lo\n\0");
+                        UEBs_TancaConnexio(socketAccepta, missatgeError);
+                    }
                 }
                 else if(trobat){
                     if(haArribatAlgo==0){ //Toca llegir de teclat
